@@ -1,10 +1,8 @@
 # sc_extract
-Home of my supercritical IPA extraction process model
+Home of my supercritical IPA extraction process model. Adapted from Samyuda and Cameron paper/thesis 
 
-Adapted from Samyuda and Cameron paper/thesis 
+Steady state model: ~completed
 
-steady state model: ~completed
-
-open loop model: in progress
+Open loop model: in progress
 
 NMPC simulation: planned
