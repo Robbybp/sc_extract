@@ -95,6 +95,32 @@ m.F_comp_nom = Param(initialize=8.70975)
 m.FDS_nom = Param(initialize=7.70975)
 m.KS_IPA_nom = Param(initialize=0.0213)
 
+########################################
+### Input and disturbance parameters ###
+########################################
+
+m.U1_V = m.Param(initialize=0.7185,mutable=True)
+m.U2_L = m.Param(initialize=1.0,mutable=True)
+m.U3_Fcool = m.Param(initialize=22.661805,mutable=True)
+
+m.W1_S = m.Param(initialize=7.75,mutable=True)
+m.W2_MK = m.Param(initialize=0.322074,mutable=True)
+m.W3_Tcool = m.Param(initialize=293,mutable=True)
+m.W4_F = m.Param(initialize=1.8,mutable=True)
+m.W5_xF = m.Param(initialize=0.019,mutable=True)
+
+# nominal values
+m.U1_V_nom = m.Param(initialize=0.7185,mutable=True)
+m.U2_L_nom = m.Param(initialize=1.0,mutable=True)
+m.U3_Fcool_nom = m.Param(initialize=22.661805,mutable=True)
+
+m.W1_S_nom = m.Param(initialize=7.75,mutable=True)
+m.W2_MK_nom = m.Param(initialize=0.322074,mutable=True)
+m.W3_Tcool_nom = m.Param(initialize=293,mutable=True)
+m.W4_F_nom = m.Param(initialize=1.8,mutable=True)
+m.W5_xF_nom = m.Param(initialize=0.019,mutable=True)
+
+
 #######################
 ### State variables ###
 #######################
