@@ -1,5 +1,5 @@
 # sc_extract
-Home of my supercritical IPA extraction process model. Adapted from Samyuda and Cameron paper/thesis 
+Home of my supercritical IPA extraction process model. Adapted from Samyudia and Cameron paper/thesis
 
 Steady state model: ~completed
 
