@@ -86,10 +86,10 @@ m.yE_S_sp = Param(initialize=0.0,mutable=True)
 m.TE_sp = Param(initialize=313.0,mutable=True)
 
 # Stripping Column
-m.FMK_nom = Param(initialize=0.31875+0.00332521)
-m.FVS_nom = Param(initialize=0.7185)
-m.FLS_nom = Param(initialize=1.0)
-m.FSS_nom = Param(initialize=7.75)
+#m.FMK_nom = Param(initialize=0.31875+0.00332521)
+#m.FVS_nom = Param(initialize=0.7185)
+#m.FLS_nom = Param(initialize=1.0)
+#m.FSS_nom = Param(initialize=7.75)
 m.FTS_nom = Param(initialize=8.43)
 m.F_comp_nom = Param(initialize=8.70975)
 m.FDS_nom = Param(initialize=7.70975)
@@ -99,26 +99,30 @@ m.KS_IPA_nom = Param(initialize=0.0213)
 ### Input and disturbance parameters ###
 ########################################
 
-m.U1_V = m.Param(initialize=0.7185,mutable=True)
-m.U2_L = m.Param(initialize=1.0,mutable=True)
-m.U3_Fcool = m.Param(initialize=22.661805,mutable=True)
+m.U1_V = Param(initialize=0.7185,mutable=True)
+m.U2_L = Param(initialize=1.0,mutable=True)
+m.U3_Fcool = Param(initialize=22.661805,mutable=True)
+# unused for now, but may be used in the future:
+m.U4_B = Param(initialize=0.322074,mutable=True)
+m.U5_D = Param(initialize=7.75,mutable=True)
 
-m.W1_S = m.Param(initialize=7.75,mutable=True)
-m.W2_MK = m.Param(initialize=0.322074,mutable=True)
-m.W3_Tcool = m.Param(initialize=293,mutable=True)
-m.W4_F = m.Param(initialize=1.8,mutable=True)
-m.W5_xF = m.Param(initialize=0.019,mutable=True)
+#m.W1_S = Param(initialize=7.75,mutable=True)
+#^Solvent flow rate not a disturbance, more of an input (as distillate from stripper)
+m.W1_MK = Param(initialize=0.322074,mutable=True)
+m.W2_Tcool = Param(initialize=293,mutable=True)
+m.W3_F = Param(initialize=1.8,mutable=True)
+m.W4_xF = Param(initialize=0.019,mutable=True)
 
 # nominal values
-m.U1_V_nom = m.Param(initialize=0.7185,mutable=True)
-m.U2_L_nom = m.Param(initialize=1.0,mutable=True)
-m.U3_Fcool_nom = m.Param(initialize=22.661805,mutable=True)
+m.U1_V_nom = Param(initialize=0.7185,mutable=True)
+m.U2_L_nom = Param(initialize=1.0,mutable=True)
+m.U3_Fcool_nom = Param(initialize=22.661805,mutable=True)
 
-m.W1_S_nom = m.Param(initialize=7.75,mutable=True)
-m.W2_MK_nom = m.Param(initialize=0.322074,mutable=True)
-m.W3_Tcool_nom = m.Param(initialize=293,mutable=True)
-m.W4_F_nom = m.Param(initialize=1.8,mutable=True)
-m.W5_xF_nom = m.Param(initialize=0.019,mutable=True)
+#m.W1_S_nom = Param(initialize=7.75,mutable=True)
+m.W1_MK_nom = Param(initialize=0.322074,mutable=True)
+m.W2_Tcool_nom = Param(initialize=293,mutable=True)
+m.W3_F_nom = Param(initialize=1.8,mutable=True)
+m.W4_xF_nom = Param(initialize=0.019,mutable=True)
 
 
 #######################
@@ -165,10 +169,10 @@ m.P2_F = Var(within=NonNegativeReals,initialize=40)
 m.xS_CO2 = Var(m.set_S_Tray,within=NonNegativeReals,initialize=0.9)
 m.yS_CO2 = Var(m.set_S_Tray,within=NonNegativeReals,initialize=0.9)
 m.FF_S = Var(within=NonNegativeReals,initialize=m.FSE_init) # feed flow rate
-m.FL_S = Var(within=NonNegativeReals,initialize=m.FLS_nom.value) # liquid reflux flow rate
-m.FV_S = Var(within=NonNegativeReals,initialize=m.FVS_nom.value) # vapor boilup flow rate
-m.FB_S = Var(within=NonNegativeReals,initialize=m.FMK_nom.value) # bottoms product flow rate 
-m.FMK = Var(within=NonNegativeReals,initialize=m.FMK_nom.value) # make up CO2 flow rate
+m.FL_S = Var(within=NonNegativeReals,initialize=m.U2_L.value) # liquid reflux flow rate
+m.FV_S = Var(within=NonNegativeReals,initialize=m.U1_V.value) # vapor boilup flow rate
+m.FB_S = Var(within=NonNegativeReals,initialize=m.W1_MK_nom.value) # bottoms product flow rate 
+m.FMK = Var(within=NonNegativeReals,initialize=m.W1_MK_nom.value) # make up CO2 flow rate
 #m.FS_S = Var(within=NonNegativeReals,initialize=m.FSS_nom.value) 
 m.FT_S = Var(within=NonNegativeReals,initialize=m.FTS_nom.value) # flow off top of column
 m.FD_S = Var(within=NonNegativeReals,initialize=m.FDS_nom.value) # distillate (solvent) flow rate
@@ -259,7 +263,7 @@ m.const_E6 = Constraint(rule=const_E6_rule)
 
 # Operating (initial) condition constraints
 def const_E7_rule(m):
-    return m.xE_F_IPA == m.xE_F_nom
+    return m.xE_F_IPA == m.W4_xF 
 m.const_E7 = Constraint(rule=const_E7_rule)
 
 def const_E8_rule(m):
@@ -268,13 +272,12 @@ def const_E8_rule(m):
 m.const_E8 = Constraint(rule=const_E8_rule)
 
 def const_E9_rule(m):
-    return m.FFE == m.FFE_nom
+    return m.FFE == m.W3_F 
 m.const_E9 = Constraint(rule=const_E9_rule)
 
 def const_E10_rule(m):
-    return m.FSE == m.FSE_init
+    return m.FSE == m.FSE_init 
 m.const_E10 = Constraint(rule=const_E10_rule)
-
 #def const_E11_rule(m):
 #    return m.yE_S_IPA == m.yE_S_sp
 #m.const_E11 = Constraint(rule=const_E11_rule)
@@ -433,16 +436,21 @@ m.const_F22 = Constraint(rule=const_F21_rule)
 
 # operating constraints:
 # (defining nominal calues of manipulated variables)
-#def const_S1_rule(m):
-#    return m.FMK == m.FMK_nom
-#m.const_S1 = Constraint(rule=const_S1_rule)
+
+# Will need to deactivate one of the three following constraints when solving the 
+# control/disturbance-specified steady state model
+# because these three values are dependent at steady state...
+
+def const_S1_rule(m):
+    return m.FMK == m.W1_MK 
+m.const_S1 = Constraint(rule=const_S1_rule)
 
 def const_S2_rule(m):
-    return m.FV_S == m.FVS_nom
+    return m.FV_S == m.U1_V
 m.const_S2 = Constraint(rule=const_S2_rule)
 
 def const_S3_rule(m):
-    return m.FL_S == m.FLS_nom
+    return m.FL_S == m.U2_L
 m.const_S3 = Constraint(rule=const_S3_rule)
 
 #def const_S4_rule(m):
@@ -669,17 +677,17 @@ def const_C7_rule(m):
 m.const_C7 = Constraint(rule=const_C7_rule)
 
 def const_C8_rule(m):
-    return m.TC_sh_in == 293
+    return m.TC_sh_in == m.W2_Tcool 
 m.const_C8 = Constraint(rule=const_C8_rule)
 
 def const_C9_rule(m):
     return 2*m.TC_sh_ave == m.TC_sh_in + m.TC_sh_out
 m.const_C9 = Constraint(rule=const_C9_rule)
 
-#def const_C10_rule(m):
-#    return m.F_C_H2O == 22.25
-#    #return m.F_C_H2O == 99.0 
-#m.const_C10 = Constraint(rule=const_C10_rule)
+# input-defining constraint:
+def const_C10_rule(m):
+    return m.F_C_H2O == m.U3_Fcool 
+m.const_C10 = Constraint(rule=const_C10_rule)
 
 def const_C11_rule(m):
     return 0 == m.F_C_H2O*m.CpC_H2O*(m.TC_sh_out-m.TC_sh_in) - m.U_ov_C*m.A_C*(m.TC_tb_ave-m.TC_sh_ave)
@@ -711,7 +719,8 @@ m.const_C14 = Constraint(rule=const_C14_rule)
 ###################
 
 #m.obj_ss = Objective(sense=minimize,expr=(m.TC_tb_out-313.0)**2)
-m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2+(m.TC_tb_out-m.TE_sp)**2)
+#m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2+(m.TC_tb_out-m.TE_sp)**2)
+m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2)
 #m.obj_ss = Objective(sense=minimize,expr=0.0)
 
 
