@@ -69,6 +69,7 @@ m.set_E_int = Set(initialize=range(2,m.NTE.value))
 m.set_E_2_NT = Set(initialize=range(2,m.NTE.value+1))
 m.set_S_Tray = Set(initialize=range(1,m.NTS.value+1))
 m.set_S_eq = Set(initialize=range(2,m.NTS.value))
+m.set_S_dyn = Set(initialize=range(1,m.NTS.value))
 
 ####################################
 ### Initial/operating conditions ###
@@ -93,6 +94,52 @@ m.F_comp_nom = Param(initialize=8.70975)
 m.FDS_nom = Param(initialize=7.70975)
 m.KS_IPA_nom = Param(initialize=0.0213)
 
+### State initial conditions ###
+
+m.xE_IPA_0 = Param(m.set_E_Tray,mutable=True,initialize={
+    1 : 0.00214759,
+    2 : 0.00419620,
+    3 : 0.00728832,
+    4 : 0.01195549})
+m.xS_CO2_0 = Param(m.set_S_dyn,mutable=True,initialize={
+    1 : 0.90508156,
+    2 : 0.96946326,
+    3 : 0.97021213,
+    4 : 0.99574316})
+m.TB_tb_0 = Param(mutable=True,initialize=413.4)
+m.TC_tb_0 = Param(mutable=True,initialize=368.8)
+m.TC_sh_0 = Param(mutable=True,initialize=313.7)
+
+########################################
+### Input and disturbance parameters ###
+########################################
+
+m.U1_V = Param(m.t,initialize=0.7185,default=0.7185,mutable=True)
+m.U2_L = Param(m.t,initialize=1.0,mutable=True,default=1.0)
+m.U3_Fcool = Param(m.t,initialize=22.661805,mutable=True,default=22.661805)
+# unused for now, but may be used in the future:
+m.U4_B = Param(m.t,initialize=0.322074,mutable=True,default=0.322074)
+m.U5_D = Param(m.t,initialize=7.75,mutable=True,default=7.75)
+
+#m.W1_S = Param(initialize=7.75,mutable=True)
+#^Solvent flow rate not a disturbance, more of an input (as distillate from stripper)
+m.W1_MK = Param(m.t,initialize=0.322074,mutable=True,default=0.322074)
+m.W2_Tcool = Param(m.t,initialize=293,mutable=True,default=293)
+m.W3_F = Param(m.t,initialize=1.8,mutable=True,default=1.8)
+m.W4_xF = Param(m.t,initialize=0.019,mutable=True,default=0.019)
+
+# nominal values
+m.U1_V_nom = Param(m.t,initialize=0.7185,mutable=True,default=0.7185)
+m.U2_L_nom = Param(m.t,initialize=1.0,mutable=True,default=1.0)
+m.U3_Fcool_nom = Param(m.t,initialize=22.661805,mutable=True,default=22.661805)
+
+#m.W1_S_nom = Param(m.t,initialize=7.75,mutable=True)
+m.W1_MK_nom = Param(m.t,initialize=0.322074,mutable=True,default=0.322074)
+m.W2_Tcool_nom = Param(m.t,initialize=293,mutable=True,default=293)
+m.W3_F_nom = Param(m.t,initialize=1.8,mutable=True,default=1.8)
+m.W4_xF_nom = Param(m.t,initialize=0.019,mutable=True,default=0.019)
+
+
 #######################
 ### State variables ###
 #######################
@@ -101,16 +148,16 @@ m.KS_IPA_nom = Param(initialize=0.0213)
 # compositions below are that of IPA 
 m.xE_IPA = Var(m.set_E_Tray,m.t,within=NonNegativeReals)
 m.yE_IPA = Var(m.set_E_Tray,m.t,within=NonNegativeReals)
-m.xE_F_IPA = Var(m.t,within=NonNegativeReals)
+m.xE_F_IPA = Var(m.t,within=NonNegativeReals,initialize=0.019)
 m.yE_S_IPA = Var(m.t,within=NonNegativeReals,initialize=0)
-m.FFE = Var(m.t,within=NonNegativeReals) # Feed Flow into Extractor
+m.FFE = Var(m.t,within=NonNegativeReals,initialize=1.8) # Feed Flow into Extractor
 # ^is this a parameter, state variable, or control variable? 
 # A: uncertain parameter/disturbance
 m.FSE = Var(m.t,within=NonNegativeReals,initialize=m.FSE_init) # Solvent Flow into Extractor
 m.KE_IPA = Var(m.t,within=NonNegativeReals)
-m.TE = Var(m.t,within=NonNegativeReals)
+m.TE = Var(m.t,within=NonNegativeReals,initialize=313)
 
-m.xE_IPAdot = DerivativeVar(m.xE_IPA,wrt=m.t)
+m.xE_IPAdot = DerivativeVar(m.xE_IPA,wrt=m.t,initialize=0)
 
 
 # Flash:
@@ -157,7 +204,7 @@ m.KS_IPA = Var(within=NonNegativeReals,initialize=m.KS_IPA_nom.value)
 m.TS = Var(m.t,within=NonNegativeReals)
 m.PS = Var(within=NonNegativeReals)
 
-m.xS_CO2dot = DerivativeVar(m.xS_CO2,wrt=m.t)
+m.xS_CO2dot = DerivativeVar(m.xS_CO2,wrt=m.t,initialize=0)
 
 # Condenser:
 m.P1_cond = Var(within=NonNegativeReals)
@@ -183,7 +230,7 @@ m.P_B = Var(within=NonNegativeReals,initialize=40)
 m.F_B = Var(m.t,within=NonNegativeReals,initialize=3.0)
 m.F_B_bypass = Var(m.t,within=NonNegativeReals,initialize=4.5)
 
-m.TB_tb_avedot = DerivativeVar(m.TB_tb_ave,wrt=m.t)
+m.TB_tb_avedot = DerivativeVar(m.TB_tb_ave,wrt=m.t,initialize=0)
 
 # Cooler:
 m.rhoC_CO2 = Var(m.t,within=NonNegativeReals)
@@ -201,8 +248,8 @@ m.F_C_H2O = Var(m.t,within=NonNegativeReals,initialize=22.25)
 m.yC_IPA = Var(m.t,within=NonNegativeReals,initialize=0.0005)
 m.yC_CO2 = Var(m.t,within=NonNegativeReals,initialize=1)
 
-m.TC_tb_avedot = DerivativeVar(m.TC_tb_ave,wrt=m.t)
-m.TC_sh_avedot = DerivativeVar(m.TC_sh_ave,wrt=m.t)
+m.TC_tb_avedot = DerivativeVar(m.TC_tb_ave,wrt=m.t,initialize=0)
+m.TC_sh_avedot = DerivativeVar(m.TC_sh_ave,wrt=m.t,initialize=0)
 
         
 #########################
@@ -244,9 +291,9 @@ def const_E6_rule(m,t):
     return m.KE_IPA[t] == -0.002*m.TE[t] + 1.016
 m.const_E6 = Constraint(m.t,rule=const_E6_rule)
 
-# Operating (initial) condition constraints
+# Feed comp disturbance constraint
 def const_E7_rule(m,t):
-    return m.xE_F_IPA[t] == m.xE_F_nom
+    return m.xE_F_IPA[t] == m.W4_xF[t]
 m.const_E7 = Constraint(m.t,rule=const_E7_rule)
 
 # Acting as connectivity constraint 
@@ -254,8 +301,9 @@ def const_E8_rule(m,t):
     return m.TE[t] == m.TC_tb_out[t]
 m.const_E8 = Constraint(m.t,rule=const_E8_rule)
 
+# Feed flow disturbance constraint
 def const_E9_rule(m,t):
-    return m.FFE[t] == m.FFE_nom
+    return m.FFE[t] == m.W3_F[t]
 m.const_E9 = Constraint(m.t,rule=const_E9_rule)
 
 # this constraint is deactivated because flow of solvent to extractor should equal 
@@ -423,17 +471,18 @@ m.const_F22 = Constraint(rule=const_F21_rule)
 
 # operating constraints:
 # (defining nominal values of manipulated variables)
-#def const_S1_rule(m):
-#    return m.FMK == m.FMK_nom
-#m.const_S1 = Constraint(rule=const_S1_rule)
+
+def const_S1_rule(m,t):
+    return m.FMK[t] == m.W1_MK[t]
+m.const_S1 = Constraint(m.t,rule=const_S1_rule)
 
 ### control inputs * : should change these constraints (add U1/U2 parameters w/ 1 col pt...)
 def const_S2_rule(m,t):
-    return m.FV_S[t] == m.FVS_nom
+    return m.FV_S[t] == m.U1_V[t]
 m.const_S2 = Constraint(m.t,rule=const_S2_rule)
 
 def const_S3_rule(m,t):
-    return m.FL_S[t] == m.FLS_nom
+    return m.FL_S[t] == m.U2_L[t]
 m.const_S3 = Constraint(m.t,rule=const_S3_rule)
 
 #def const_S4_rule(m):
@@ -672,17 +721,16 @@ def const_C7_rule(m,t):
 m.const_C7 = Constraint(m.t,rule=const_C7_rule)
 
 def const_C8_rule(m,t):
-    return m.TC_sh_in[t] == 293
+    return m.TC_sh_in[t] == m.W2_Tcool[t]
 m.const_C8 = Constraint(m.t,rule=const_C8_rule)
 
 def const_C9_rule(m,t):
     return 2*m.TC_sh_ave[t] == m.TC_sh_in[t] + m.TC_sh_out[t]
 m.const_C9 = Constraint(m.t,rule=const_C9_rule)
 
-#def const_C10_rule(m):
-#    return m.F_C_H2O == 22.25
-#    #return m.F_C_H2O == 99.0 
-#m.const_C10 = Constraint(rule=const_C10_rule)
+def const_C10_rule(m,t):
+    return m.F_C_H2O[t] == m.U3_Fcool[t]
+m.const_C10 = Constraint(m.t,rule=const_C10_rule)
 
 # Really should be a PDE...
 def const_C11_rule(m,t):
@@ -712,12 +760,44 @@ def const_C15_rule(m,t):
     #return m.FMK == m.FL_S-m.FV_S+(1-m.qF)*m.FF_S
 m.const_C15 = Constraint(m.t,rule=const_C15_rule)
 
+#####################################################
+### Initial Conditions for Differential Variables ###
+#####################################################
+
+def const_init_xE_rule(m,i):
+    return m.xE_IPA[i,0] == m.xE_IPA_0[i]
+m.const_init_xE = Constraint(m.set_E_Tray,rule=const_init_xE_rule)
+
+def const_init_xS_rule(m,i):
+    return m.xS_CO2[i,0] == m.xS_CO2_0[i]
+m.const_init_xS = Constraint(m.set_S_dyn,rule=const_init_xS_rule)
+
+def const_init_TB_tb_rule(m):
+    return m.TB_tb_ave[0] == m.TB_tb_0
+m.const_init_TB_tb = Constraint(rule=const_init_TB_tb_rule)
+
+def const_init_TC_tb_rule(m):
+    return m.TC_tb_ave[0] == m.TC_tb_0
+m.const_init_TC_tb = Constraint(rule=const_init_TC_tb_rule)
+
+def const_init_TC_sh_rule(m):
+    return m.TC_sh_ave[0] == m.TC_sh_0
+m.const_init_TC_sh = Constraint(rule=const_init_TC_sh_rule)
+
 ########################
 ### Discretize Model ###
 ########################
 
 discretizer = TransformationFactory('dae.collocation')
 discretizer.apply_to(m,nfe=25,ncp=4,scheme='LAGRANGE-RADAU')
+
+# Reduce number of collocation points for control variables 
+# to force them to be piecewise constant 
+
+#m = discretizer.reduce_collocation_points(m,var=m.U1_V,ncp=1,contset=m.t)
+#m = discretizer.reduce_collocation_points(m,var=m.U2_L,ncp=1,contset=m.t)
+#m = discretizer.reduce_collocation_points(m,var=m.U3_Fcool,ncp=1,contset=m.t)
+
 
 ###################
 ### objective #####
