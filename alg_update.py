@@ -27,6 +27,8 @@ def alg_update(m,t):
     for i in [3,2,1]:    
         m.yE_IPA[i,t].set_value((m.KE_IPA[t].value/m.EMVE.value)*(m.xE_IPA[i,t].value-m.xE_IPA[i+1,t].value*(1-m.EMVE.value)))
 
+    m.FFE[t].set_value( m.W3_F[t].value )
+
     # Flash VLE
     m.KF_CO2.set_value(1.3)
     m.KF_IPA.set_value(0.0125)
@@ -37,7 +39,7 @@ def alg_update(m,t):
     
     # Flash temperature
     # might need to solve an implicit function (sub-problem) here
-    m.TF[t].set_value(350)
+    m.TF[t].set_value(354)
     
     A = 25.0
     B = 55.19
@@ -47,7 +49,7 @@ def alg_update(m,t):
     F = -403.61
     H = -393.51
     m.H_CO2_v[t].set_value( A*(m.TF[t].value/1000) + B/2* (m.TF[t].value/1000)**2 + \
-            C/3*(m.TF[t].value/1000)**3 + D/4*(m.TF[t].value)**4 - \
+            C/3*(m.TF[t].value/1000)**3 + D/4*(m.TF[t].value/1000)**4 - \
             E/(m.TF[t].value/1000) +F - H)
     m.H_CO2_l[t].set_value( ((195.69 - 310*10.18)*m.TF[t].value + \
             10.18/2*m.TF[t].value**2)/1000 - H_CO2_l_298 )
@@ -55,8 +57,18 @@ def alg_update(m,t):
     m.H_IPA_v[t].set_value( ((89.74 - 300*0.219)*m.TF[t].value + 0.219/2*m.TF[t].value**2)/1000 \
             - H_IPA_v_298 )
     m.H_IPA_l[t].set_value( ((165.6-311.6*0.756)*m.TF[t].value + 0.756/2*m.TF[t].value**2 \
-            + H_IPA_l_298)/1000 )
+            - H_IPA_l_298)/1000 )
 
+    m.P1_F.set_value( 100 )
+    m.P2_F.set_value( 40 )
+    # nominal value of disturbance used because optimization problem will be solved with nominal
+    # values in mind
+    # ... but this is an open loop problem... should real values of disturbance be used...
+    # I think so... and then they should be changd back to nominal values for MPC 
+    m.FSE[t].set_value( 1/(1-m.qF[t].value)*(m.W1_MK[t].value + m.U1_V[t].value - m.U2_L[t].value))
+    m.FFF[t].set_value( m.FSE[t].value )
+
+    
 
 
 
