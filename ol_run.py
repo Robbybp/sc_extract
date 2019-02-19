@@ -73,14 +73,14 @@ for t in m.t:
 # Initialize algebraic states
 # write function for this...
 
-m = alg_update(m,0)
+#m = alg_update(m,0)
 
-ol_xE = getattr(m,'xE_IPA')
-print(dir(ol_xE))
-print(dir(ol_xE.index_set()))
-print([v for v in ol_xE.index_set()])
-print(ol_xE.index_set().set_tuple)
-print(m.t in ol_xE.index_set().set_tuple)
+#ol_xE = getattr(m,'xE_IPA')
+#print(dir(ol_xE))
+#print(dir(ol_xE.index_set()))
+#print([v for v in ol_xE.index_set()])
+#print(ol_xE.index_set().set_tuple)
+#print(m.t in ol_xE.index_set().set_tuple)
 
 #print([v for _, v in ol_xE.index_set()])
 #print(m.t in ol_xE.index_set())
@@ -94,6 +94,8 @@ print(m.t in ol_xE.index_set().set_tuple)
 #print([v for v in ol_K.index_set()])
 #print([t for t in m.t])
 # Copy steady state initialization for all time
+
+#'''
 for var_ss in m_ss.component_objects(Var, active=True):
     print(var_ss)
 #    print(type(var_ss))
@@ -147,7 +149,7 @@ for var_ss in m_ss.component_objects(Var, active=True):
 #        print(type(index))
 #        print(var_ss[index])
 
-
+#'''
 #print(getattr(m_ss,'xE_IPA'))
 
 #for index in var_ol:
@@ -160,9 +162,11 @@ for var_ss in m_ss.component_objects(Var, active=True):
 #tuple2 = (tuple1,3)
 #print(tuple2)
 
+m = alg_update(m,0)
+
 with open('m_ol_init.txt','w') as f:
     m.display(ostream=f)
-#
+
 ipopt = SolverFactory('ipopt')
 ipopt.solve(m,tee=True)
 

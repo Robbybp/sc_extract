@@ -131,8 +131,17 @@ m.W4_xF_nom = Param(initialize=0.019,mutable=True)
 
 # Extractor:
 # compositions below are that of IPA 
-m.xE_IPA = Var(m.set_E_Tray,within=NonNegativeReals,initialize=0.1)
-m.yE_IPA = Var(m.set_E_Tray,within=NonNegativeReals,initialize=0.1)
+m.xE_IPA = Var(m.set_E_Tray,within=NonNegativeReals,initialize=0.005)
+#        { 1 : 0.0016,
+#          2 : 0.0038,
+#          3 : 0.0070,
+#          4 : 0.0118 })
+m.yE_IPA = Var(m.set_E_Tray,within=NonNegativeReals,initialize=0.002)
+#        { 1 : 0.000489, 
+#          2 : 0.001228,
+#          3 : 0.002342,
+#          4 : 0.004024 })
+
 m.xE_F_IPA = Var(within=NonNegativeReals,initialize=0.19)
 m.yE_S_IPA = Var(within=NonNegativeReals,initialize=0.0002)
 m.FFE = Var(within=NonNegativeReals,initialize=1.8) # Feed Flow into Extractor
@@ -151,10 +160,10 @@ m.yF_IPA = Var(within=NonNegativeReals,initialize=0.004)
 m.yF_CO2 = Var(within=NonNegativeReals,initialize=0.9)
 m.KF_CO2 = Var(within=NonNegativeReals,initialize=1.5)
 m.KF_IPA = Var(within=NonNegativeReals,initialize=0.02)
-m.Cp_CO2_l = Var(within=NonNegativeReals,initialize=226.21)
-m.Cp_CO2_v = Var(within=NonNegativeReals,initialize=37.82)
-m.Cp_IPA_l = Var(within=NonNegativeReals,initialize=166.66)
-m.Cp_IPA_v = Var(within=NonNegativeReals,initialize=92.59)
+#m.Cp_CO2_l = Var(within=NonNegativeReals,initialize=226.21)
+#m.Cp_CO2_v = Var(within=NonNegativeReals,initialize=37.82)
+#m.Cp_IPA_l = Var(within=NonNegativeReals,initialize=166.66)
+#m.Cp_IPA_v = Var(within=NonNegativeReals,initialize=92.59)
 m.H_CO2_l = Var(within=Reals,initialize=3.22) # why are the liquid streams at higher enthalpy?
 m.H_CO2_v = Var(within=Reals,initialize=0.55)
 m.H_CO2_E = Var(within=Reals,initialize=3.0)
@@ -319,29 +328,29 @@ m.const_F5 = Constraint(rule=const_F5_rule)
 
 # Thermo Equations
 
-def const_F6_rule(m):
-    A =  25.00
-    B =  55.19
-    C = -33.69
-    D =  7.948
-    E = -0.1366
-    return m.Cp_CO2_v == A+ B*m.TF/1000 + C*(m.TF/1000)**2 + D*(m.TF/1000)**3 + E/(m.TF/1000)**2
-m.const_F6 = Constraint(rule=const_F6_rule)
-
-def const_F7_rule(m):
-    A =  25.00
-    B =  55.19
-    C = -33.69
-    D =  7.948
-    E = -0.1366
-    F = -403.61
-    H = -393.52
-    return m.H_CO2_v == A*(m.TF/1000)+B/2*(m.TF/1000)**2+C/3*(m.TF/1000)**3+D/4*(m.TF/1000)**4-E/(m.TF/1000)+F-H
-m.const_F7 = Constraint(rule=const_F7_rule)
-
-def const_F8_rule(m):
-    return m.Cp_CO2_l == 195.67 + (m.TF-310)*10.18
-m.const_F8 = Constraint(rule=const_F8_rule)
+#def const_F6_rule(m):
+#    A =  25.00
+#    B =  55.19
+#    C = -33.69
+#    D =  7.948
+#    E = -0.1366
+#    return m.Cp_CO2_v == A+ B*m.TF/1000 + C*(m.TF/1000)**2 + D*(m.TF/1000)**3 + E/(m.TF/1000)**2
+#m.const_F6 = Constraint(rule=const_F6_rule)
+#
+#def const_F7_rule(m):
+#    A =  25.00
+#    B =  55.19
+#    C = -33.69
+#    D =  7.948
+#    E = -0.1366
+#    F = -403.61
+#    H = -393.52
+#    return m.H_CO2_v == A*(m.TF/1000)+B/2*(m.TF/1000)**2+C/3*(m.TF/1000)**3+D/4*(m.TF/1000)**4-E/(m.TF/1000)+F-H
+#m.const_F7 = Constraint(rule=const_F7_rule)
+#
+#def const_F8_rule(m):
+#    return m.Cp_CO2_l == 195.67 + (m.TF-310)*10.18
+#m.const_F8 = Constraint(rule=const_F8_rule)
 
 
 def const_F9_rule(m): 
@@ -349,18 +358,18 @@ def const_F9_rule(m):
     return m.H_CO2_l == ((195.67-310*10.18)*m.TF + 10.18/2*m.TF**2)/1000 - H_CO2_l_298
 m.const_F9 = Constraint(rule=const_F9_rule)
 
-def const_F10_rule(m):
-    return m.Cp_IPA_v == 89.74+ (m.TF-300)*0.219
-m.const_F10 = Constraint(rule=const_F10_rule)
+#def const_F10_rule(m):
+#    return m.Cp_IPA_v == 89.74+ (m.TF-300)*0.219
+#m.const_F10 = Constraint(rule=const_F10_rule)
 
 def const_F11_rule(m):
     H_IPA_v_298 = ((89.74-300*0.219)*298.15 + 0.219/2*298.15**2)/1000
     return m.H_IPA_v == ((89.74-300*0.219)*m.TF + 0.219/2*m.TF**2)/1000 - H_IPA_v_298
 m.const_F11 = Constraint(rule=const_F11_rule)
 
-def const_F12_rule(m):
-    return m.Cp_IPA_l == 165.6+(m.TF-311.6)*0.756
-m.const_F12 = Constraint(rule=const_F12_rule)
+#def const_F12_rule(m):
+#    return m.Cp_IPA_l == 165.6+(m.TF-311.6)*0.756
+#m.const_F12 = Constraint(rule=const_F12_rule)
 
 def const_F13_rule(m):
     H_IPA_l_298 = (165.6-311.6*0.756)*298.15 + 0.756/2*298.15**2

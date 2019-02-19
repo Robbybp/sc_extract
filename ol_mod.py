@@ -16,9 +16,6 @@ m.t = ContinuousSet(bounds=(0,5)) # solve nmpc opt problem over 5 hours
 
 # Parameters
 
-# heat capacities at 40 C, 102 atm
-m.Cp_H20_L = 4.186
-
 # Extractor Parameters:
 m.NTE = Param(initialize=4) # (integer)
 m.ME = Param(initialize=0.25) # kmol, steady state holdup
@@ -84,6 +81,11 @@ m.FSE_init = Param(initialize=7.75)
 m.yE_S_sp = Param(initialize=0.0,mutable=True)
 m.TE_sp = Param(initialize=313.0,mutable=True)
 
+m.KF_IPA_nom = Param(initialize=0.0125)
+m.KF_CO2_nom = Param(initialize=1.3)
+m.P1_F_nom = Param(initialize=100)
+m.P2_F_nom = Param(initialize=40)
+
 # Stripping Column
 m.FMK_nom = Param(initialize=0.31875+0.00332521)
 m.FVS_nom = Param(initialize=0.7185)
@@ -93,6 +95,14 @@ m.FTS_nom = Param(initialize=8.43)
 m.F_comp_nom = Param(initialize=8.70975)
 m.FDS_nom = Param(initialize=7.70975)
 m.KS_IPA_nom = Param(initialize=0.0213)
+
+# compressor
+m.P2_cond_nom = Param(initialize=100) # atm
+
+# Uncertain parameters in reboiler:
+m.dH_IPA_nom = Param(initialize=44000)
+m.dH_CO2_nom = Param(initialize=15326)
+m.CpB_CO2_nom = Param(initialize=40.0)
 
 ### State initial conditions ###
 
@@ -169,13 +179,13 @@ m.yF_IPA = Var(m.t,within=NonNegativeReals,initialize=0.004)
 m.yF_CO2 = Var(m.t,within=NonNegativeReals)
 m.KF_CO2 = Var(within=NonNegativeReals)
 m.KF_IPA = Var(within=NonNegativeReals)
-m.HFF = Var(m.t,within=NonNegativeReals) # Enthalpy in the feed of the flash
-m.HVF = Var(m.t,within=NonNegativeReals) # Enthalpy of the vapor after the flash
-m.HLF = Var(m.t,within=NonNegativeReals) # Enthalpy of the liquid after the flash
-m.Cp_CO2_l = Var(m.t,within=NonNegativeReals,initialize=226.21)
-m.Cp_CO2_v = Var(m.t,within=NonNegativeReals,initialize=37.82)
-m.Cp_IPA_l = Var(m.t,within=NonNegativeReals,initialize=166.66)
-m.Cp_IPA_v = Var(m.t,within=NonNegativeReals,initialize=92.59)
+#m.HFF = Var(m.t,within=NonNegativeReals) # Enthalpy in the feed of the flash
+#m.HVF = Var(m.t,within=NonNegativeReals) # Enthalpy of the vapor after the flash
+#m.HLF = Var(m.t,within=NonNegativeReals) # Enthalpy of the liquid after the flash
+#m.Cp_CO2_l = Var(m.t,within=NonNegativeReals,initialize=226.21)
+#m.Cp_CO2_v = Var(m.t,within=NonNegativeReals,initialize=37.82)
+#m.Cp_IPA_l = Var(m.t,within=NonNegativeReals,initialize=166.66)
+#m.Cp_IPA_v = Var(m.t,within=NonNegativeReals,initialize=92.59)
 m.H_CO2_l = Var(m.t,within=Reals,initialize=3.22) # why are the liquid streams at higher enthalpy?
 m.H_CO2_v = Var(m.t,within=Reals,initialize=0.55)
 m.H_CO2_E = Var(m.t,within=Reals,initialize=3.0)
@@ -199,7 +209,7 @@ m.FT_S = Var(m.t,within=NonNegativeReals,initialize=m.FTS_nom.value) # flow off 
 m.FD_S = Var(m.t,within=NonNegativeReals,initialize=m.FDS_nom.value) # distillate (solvent) flow rate
 m.F_comp = Var(m.t,within=NonNegativeReals,initialize=m.F_comp_nom.value) # flow rate through compresser 
 m.xF_S = Var(m.t,within=NonNegativeReals) # CO2 fraction of combined (liq & vap) feed to stripper
-m.KS_CO2 = Var(within=NonNegativeReals)
+m.KS_CO2 = Var(within=NonNegativeReals) # unused
 m.KS_IPA = Var(within=NonNegativeReals,initialize=m.KS_IPA_nom.value)
 m.TS = Var(m.t,within=NonNegativeReals)
 m.PS = Var(within=NonNegativeReals)
@@ -354,48 +364,49 @@ m.const_F5 = Constraint(rule=const_F5_rule)
 
 # Thermo Equations
 
-def const_F6_rule(m,t):
-    A =  25.00
-    B =  55.19
-    C = -33.69
-    D =  7.948
-    E = -0.1366
-    return m.Cp_CO2_v[t] == A+ B*m.TF[t]/1000 + C*(m.TF[t]/1000)**2 + D*(m.TF[t]/1000)**3 + E/(m.TF[t]/1000)**2
-m.const_F6 = Constraint(m.t,rule=const_F6_rule)
-
-def const_F7_rule(m,t):
-    A =  25.00
-    B =  55.19
-    C = -33.69
-    D =  7.948
-    E = -0.1366
-    F = -403.61
-    H = -393.52
-    return m.H_CO2_v[t] == A*(m.TF[t]/1000)+B/2*(m.TF[t]/1000)**2+C/3*(m.TF[t]/1000)**3+D/4*(m.TF[t]/1000)**4-E/(m.TF[t]/1000)+F-H
-m.const_F7 = Constraint(m.t,rule=const_F7_rule)
-
-def const_F8_rule(m,t):
-    return m.Cp_CO2_l[t] == 195.67 + (m.TF[t]-310)*10.18
-m.const_F8 = Constraint(m.t,rule=const_F8_rule)
-
-
-def const_F9_rule(m,t): 
-    H_CO2_l_298 = ((195.67-310*10.18)*298.15 + 10.18/2*298.15**2)/1000
-    return m.H_CO2_l[t] == ((195.67-310*10.18)*m.TF[t] + 10.18/2*m.TF[t]**2)/1000 - H_CO2_l_298
-m.const_F9 = Constraint(m.t,rule=const_F9_rule)
-
-def const_F10_rule(m,t):
-    return m.Cp_IPA_v[t] == 89.74+ (m.TF[t]-300)*0.219
-m.const_F10 = Constraint(m.t,rule=const_F10_rule)
+# Heat capacities are unnecessary
+#def const_F6_rule(m,t):
+#    A =  25.00
+#    B =  55.19
+#    C = -33.69
+#    D =  7.948
+#    E = -0.1366
+#    return m.Cp_CO2_v[t] == A+ B*m.TF[t]/1000 + C*(m.TF[t]/1000)**2 + D*(m.TF[t]/1000)**3 + E/(m.TF[t]/1000)**2
+#m.const_F6 = Constraint(m.t,rule=const_F6_rule)
+#
+#def const_F7_rule(m,t):
+#    A =  25.00
+#    B =  55.19
+#    C = -33.69
+#    D =  7.948
+#    E = -0.1366
+#    F = -403.61
+#    H = -393.52
+#    return m.H_CO2_v[t] == A*(m.TF[t]/1000)+B/2*(m.TF[t]/1000)**2+C/3*(m.TF[t]/1000)**3+D/4*(m.TF[t]/1000)**4-E/(m.TF[t]/1000)+F-H
+#m.const_F7 = Constraint(m.t,rule=const_F7_rule)
+#
+#def const_F8_rule(m,t):
+#    return m.Cp_CO2_l[t] == 195.67 + (m.TF[t]-310)*10.18
+#m.const_F8 = Constraint(m.t,rule=const_F8_rule)
+#
+#
+#def const_F9_rule(m,t): 
+#    H_CO2_l_298 = ((195.67-310*10.18)*298.15 + 10.18/2*298.15**2)/1000
+#    return m.H_CO2_l[t] == ((195.67-310*10.18)*m.TF[t] + 10.18/2*m.TF[t]**2)/1000 - H_CO2_l_298
+#m.const_F9 = Constraint(m.t,rule=const_F9_rule)
+#
+#def const_F10_rule(m,t):
+#    return m.Cp_IPA_v[t] == 89.74+ (m.TF[t]-300)*0.219
+#m.const_F10 = Constraint(m.t,rule=const_F10_rule)
 
 def const_F11_rule(m,t):
     H_IPA_v_298 = ((89.74-300*0.219)*298.15 + 0.219/2*298.15**2)/1000
     return m.H_IPA_v[t] == ((89.74-300*0.219)*m.TF[t] + 0.219/2*m.TF[t]**2)/1000 - H_IPA_v_298
 m.const_F11 = Constraint(m.t,rule=const_F11_rule)
 
-def const_F12_rule(m,t):
-    return m.Cp_IPA_l[t] == 165.6+(m.TF[t]-311.6)*0.756
-m.const_F12 = Constraint(m.t,rule=const_F12_rule)
+#def const_F12_rule(m,t):
+#    return m.Cp_IPA_l[t] == 165.6+(m.TF[t]-311.6)*0.756
+#m.const_F12 = Constraint(m.t,rule=const_F12_rule)
 
 def const_F13_rule(m,t):
     H_IPA_l_298 = (165.6-311.6*0.756)*298.15 + 0.756/2*298.15**2
@@ -465,7 +476,7 @@ def const_F21_rule(m):
     return m.P2_F == 40 # atm
 m.const_F22 = Constraint(rule=const_F21_rule)
 
-# Stripping column
+# Stripping Column
 # will need to write my own constraints to 
 # keep my variables organized... 
 
@@ -573,12 +584,13 @@ def const_S13_rule(m,t):
 m.const_S13 = Constraint(m.t,rule=const_S13_rule)
 
 # VLE:
+# VLE coefficients obtained from a VLE simulation with PR-EOS in Aspen
 def const_S14_rule(m):
     return m.KS_CO2 == 1.3
 m.const_S14 = Constraint(rule=const_S14_rule)
 
 def const_S18_rule(m):
-    return m.KS_IPA == 0.0213
+    return m.KS_IPA == m.KS_IPA_nom 
 m.const_S18 = Constraint(rule=const_S18_rule)
 
 def const_S15_rule(m,i,t):
@@ -634,7 +646,7 @@ m.const_cond6 = Constraint(m.t,rule=const_cond6_rule)
 #   ^ again not necessary for steady state
 
 def const_B1_rule(m,t):
-    return m.Pvap_B_IPA[t]*101.325 == 10**(6.866 - 1360/(197.6+m.TB_sh[t]-273.15))
+    return m.Pvap_B_IPA[t]*101.325== 10**(6.866 - 1360/(197.6+m.TB_sh[t]-273.15))
 m.const_B1 = Constraint(m.t,rule=const_B1_rule)
 
 def const_B2_rule(m):
@@ -646,11 +658,11 @@ def const_B3_rule(m,t):
 m.const_B3 = Constraint(m.t,rule=const_B3_rule)
 
 def const_B4_rule(m):
-    return m.dH_IPA == 44000 # kJ/kmol
+    return m.dH_IPA == m.dH_IPA_nom # kJ/kmol
 m.const_B4 = Constraint(rule=const_B4_rule)
 
 def const_B5_rule(m):
-    return m.dH_CO2 == 15326 # kJ/kmol
+    return m.dH_CO2 == m.dH_CO2_nom # kJ/kmol
 m.const_B5 = Constraint(rule=const_B5_rule)
 
 def const_B6_rule(m,t):
@@ -666,7 +678,7 @@ m.const_B7 = Constraint(m.t,rule=const_B7_rule)
 
 # constant heat capacity, that of CO2, for simplicity
 def const_B8_rule(m,t):
-    return m.CpB_CO2[t] == 40.0
+    return m.CpB_CO2[t] == m.CpB_CO2_nom
 m.const_B8 = Constraint(m.t,rule=const_B8_rule)
 
 def const_B9_rule(m,t):
