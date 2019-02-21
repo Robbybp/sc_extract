@@ -344,18 +344,18 @@ m.const_F5 = Constraint(rule=const_F5_rule)
 #    E = -0.1366
 #    return m.Cp_CO2_v == A+ B*m.TF/1000 + C*(m.TF/1000)**2 + D*(m.TF/1000)**3 + E/(m.TF/1000)**2
 #m.const_F6 = Constraint(rule=const_F6_rule)
-#
-#def const_F7_rule(m):
-#    A =  25.00
-#    B =  55.19
-#    C = -33.69
-#    D =  7.948
-#    E = -0.1366
-#    F = -403.61
-#    H = -393.52
-#    return m.H_CO2_v == A*(m.TF/1000)+B/2*(m.TF/1000)**2+C/3*(m.TF/1000)**3+D/4*(m.TF/1000)**4-E/(m.TF/1000)+F-H
-#m.const_F7 = Constraint(rule=const_F7_rule)
-#
+
+def const_F7_rule(m):
+    A =  25.00
+    B =  55.19
+    C = -33.69
+    D =  7.948
+    E = -0.1366
+    F = -403.61
+    H = -393.52
+    return m.H_CO2_v == A*(m.TF/1000)+B/2*(m.TF/1000)**2+C/3*(m.TF/1000)**3+D/4*(m.TF/1000)**4-E/(m.TF/1000)+F-H
+m.const_F7 = Constraint(rule=const_F7_rule)
+
 #def const_F8_rule(m):
 #    return m.Cp_CO2_l == 195.67 + (m.TF-310)*10.18
 #m.const_F8 = Constraint(rule=const_F8_rule)
@@ -737,8 +737,8 @@ m.const_C14 = Constraint(rule=const_C14_rule)
 
 #m.obj_ss = Objective(sense=minimize,expr=(m.TC_tb_out-313.0)**2)
 #m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2+(m.TC_tb_out-m.TE_sp)**2)
-m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2)
-#m.obj_ss = Objective(sense=minimize,expr=0.0)
+#m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2)
+m.obj_ss = Objective(sense=minimize,expr=0.0)
 
 
 
