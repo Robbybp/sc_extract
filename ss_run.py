@@ -29,7 +29,7 @@ m.yE_IPA[4].set_value(0.004024)
 ipopt = SolverFactory('ipopt')
 ipopt.solve(m,tee=True)
 
-m.write('ss_mod.nl')#,io_options={symbolic_solver_labels:True})
+#m.write('ss_mod.nl')#,io_options={symbolic_solver_labels:True})
 
 with open('m_ss.txt', 'w') as f:
     m.display(ostream=f)

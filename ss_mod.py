@@ -70,7 +70,7 @@ m.set_E_int = Set(initialize=range(2,m.NTE.value))
 m.set_E_2_NT = Set(initialize=range(2,m.NTE.value+1))
 m.set_S_Tray = Set(initialize=range(1,m.NTS.value+1))
 m.set_S_eq = Set(initialize=range(2,m.NTS.value))
-m.set_S_eq.pprint()
+m.set_S_dyn= Set(initialize=range(1,m.NTS.value))
 
 ####################################
 ### Initial/operating conditions ###
@@ -175,8 +175,16 @@ m.P1_F = Var(within=NonNegativeReals,initialize=100)
 m.P2_F = Var(within=NonNegativeReals,initialize=40)
 
 # Stripping Column:
-m.xS_CO2 = Var(m.set_S_Tray,within=NonNegativeReals,initialize=0.9)
-m.yS_CO2 = Var(m.set_S_Tray,within=NonNegativeReals,initialize=0.9)
+
+# 5th 'tray' (condenser) composition is a separate variable because it does not need
+# to have a derivative defined
+m.xS_CO2_5 = Var(within=NonNegativeReals,initialize=0.9)
+m.xS_CO2 = Var(m.set_S_dyn,within=NonNegativeReals,initialize=0.9)
+
+# no real reason to split up yS_CO2, but will do so for consistency
+m.yS_CO2 = Var(m.set_S_dyn,within=NonNegativeReals,initialize=0.9)
+m.yS_CO2_5 = Var(within=NonNegativeReals,initialize=0.9)
+
 m.FF_S = Var(within=NonNegativeReals,initialize=m.FSE_init) # feed flow rate
 m.FL_S = Var(within=NonNegativeReals,initialize=m.U2_L.value) # liquid reflux flow rate
 m.FV_S = Var(within=NonNegativeReals,initialize=m.U1_V.value) # vapor boilup flow rate
@@ -187,7 +195,7 @@ m.FT_S = Var(within=NonNegativeReals,initialize=m.FTS_nom.value) # flow off top 
 m.FD_S = Var(within=NonNegativeReals,initialize=m.FDS_nom.value) # distillate (solvent) flow rate
 m.F_comp = Var(within=NonNegativeReals,initialize=m.F_comp_nom.value) # flow rate through compresser 
 m.xF_S = Var(within=NonNegativeReals,initialize=0.9) # CO2 fraction of combined (liq & vap) feed to stripper
-m.KS_CO2 = Var(within=NonNegativeReals,initialize=1.3)
+#m.KS_CO2 = Var(within=NonNegativeReals,initialize=1.3)
 m.KS_IPA = Var(within=NonNegativeReals,initialize=m.KS_IPA_nom.value)
 m.TS = Var(within=NonNegativeReals,initialize=350)
 m.PS = Var(within=NonNegativeReals,initialize=40)
@@ -242,8 +250,8 @@ m.yC_CO2 = Var(within=NonNegativeReals,initialize=1)
 
 # Differential:
 def const_E1_rule(m):
-    return 0 == m.FFE*(m.xE_F_IPA - m.xE_IPA[m.NTE]) + \
-               m.FSE*(m.yE_IPA[m.NTE-1] - m.yE_IPA[m.NTE])
+    return 0 == m.FFE*(m.xE_F_IPA - m.xE_IPA[m.NTE.value]) + \
+               m.FSE*(m.yE_IPA[m.NTE-1] - m.yE_IPA[m.NTE.value])
 m.const_E1 = Constraint(rule=const_E1_rule)
 
 def const_E2_rule(m,i):
@@ -483,7 +491,7 @@ m.const_S6 = Constraint(rule=const_S6_rule)
 # tray 4:
 def const_S7_rule(m): 
     # need to re-calculate xS_CO2[NTS]
-    return 0 == m.FL_S*(m.xS_CO2[m.NTS.value] - m.xS_CO2[4]) + \
+    return 0 == m.FL_S*(m.xS_CO2_5 - m.xS_CO2[4]) + \
             (m.FV_S + m.qF*m.FF_S)*(m.yS_CO2[3] - m.yS_CO2[4])
 m.const_S7 = Constraint(rule=const_S7_rule)
 
@@ -527,7 +535,7 @@ m.const_S20 = Constraint(rule=const_S20_rule)
 def const_S11_rule(m):
     # This equation specifies composition in "condenser," after 
     # mixing with make-up CO2 stream
-    return m.FT_S*m.yS_CO2[4] + m.FMK == m.F_comp*m.yS_CO2[5]
+    return m.FT_S*m.yS_CO2[4] + m.FMK == m.F_comp*m.yS_CO2_5
 m.const_S11 = Constraint(rule=const_S11_rule)
 
 #def const_S12_rule(m): 
@@ -546,9 +554,9 @@ def const_S13_rule(m):
 m.const_S13 = Constraint(rule=const_S13_rule)
 
 # VLE:
-def const_S14_rule(m):
-    return m.KS_CO2 == 1.3
-m.const_S14 = Constraint(rule=const_S14_rule)
+#def const_S14_rule(m):
+#    return m.KS_CO2 == 1.3
+#m.const_S14 = Constraint(rule=const_S14_rule)
 
 def const_S18_rule(m):
     return m.KS_IPA == 0.0213
@@ -567,7 +575,7 @@ m.const_S16 = Constraint(rule=const_S16_rule)
 # compositions are the same across phases in the condenser
 # (because they are different 'branches' of the same stream)
 def const_S17_rule(m): 
-    return m.yS_CO2[m.NTS.value] == m.xS_CO2[m.NTS.value]
+    return m.yS_CO2_5 == m.xS_CO2_5
 m.const_S17 = Constraint(rule=const_S17_rule)
 
 # Condenser:
@@ -703,7 +711,7 @@ def const_C11_rule(m):
 m.const_C11 = Constraint(rule=const_C11_rule)
 
 def const_C12_rule(m):
-    return m.yC_CO2 == m.xS_CO2[m.NTS]
+    return m.yC_CO2 == m.xS_CO2_5
 m.const_C12 = Constraint(rule=const_C12_rule)
 
 def const_C13_rule(m):
