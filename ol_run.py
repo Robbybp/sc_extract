@@ -29,12 +29,12 @@ m_ss.write('ss_mod.nl')
 # Set differential state IC parameters
 
 for i in m.set_E_Tray:
-    m.xE_IPA_0[i]=(m_ss.xE_IPA[i].value)
+    m.xE_IPA_0[i].set_value(m_ss.xE_IPA[i].value)
 for i in m.set_S_dyn:
-    m.xS_CO2_0[i]=(m_ss.xS_CO2[i].value)
-m.TB_tb_0=(m_ss.TB_tb_ave.value)
-m.TC_tb_0=(m_ss.TC_tb_ave.value)
-m.TC_sh_0=(m_ss.TC_sh_ave.value)
+    m.xS_CO2_0[i].set_value(m_ss.xS_CO2[i].value)
+m.TB_tb_0.set_value(m_ss.TB_tb_ave.value)
+m.TC_tb_0.set_value(m_ss.TC_tb_ave.value)
+m.TC_sh_0.set_value(m_ss.TC_sh_ave.value)
 
 # Initialize differential states 
 
@@ -51,15 +51,16 @@ m.TC_sh_ave[0].set_value(m.TC_sh_0.value)
 # this is is where the values used in the open loop simulation are set
 # To run with time-varying inputs or disturbances,
 # change these parameters to be time-varying
+#print(m.t.get_finite_elements())
 for t in m.t:
-    m.U1_V[t] = m_ss.U1_V.value
-    m.U2_L[t] = m_ss.U2_L.value
-    m.U3_Fcool[t] = m_ss.U3_Fcool.value
+    m.U1_V[t].set_value(m_ss.U1_V.value)
+    m.U2_L[t].set_value(m_ss.U2_L.value)
+    m.U3_Fcool[t].set_value(m_ss.U3_Fcool.value)
 
-    m.W1_MK[t] = m_ss.W1_MK.value
-    m.W2_Tcool[t] = m_ss.W2_Tcool.value
-    m.W3_F[t] = m_ss.W3_F.value
-    m.W4_xF[t] = m_ss.W4_xF.value
+    m.W1_MK[t].set_value(m_ss.W1_MK.value)
+    m.W2_Tcool[t].set_value(m_ss.W2_Tcool.value)
+    m.W3_F[t].set_value(m_ss.W3_F.value)
+    m.W4_xF[t].set_value(m_ss.W4_xF.value)
 # now initialize input/disturbance variable values    
     m.FV_S[t].set_value(m.U1_V[t].value)
     m.FL_S[t].set_value(m.U2_L[t].value)
@@ -97,7 +98,7 @@ for t in m.t:
 
 #'''
 for var_ss in m_ss.component_objects(Var, active=True):
-    print(var_ss)
+#    print(var_ss)
 #    print(type(var_ss))
 #    print(str(var_ss))
 #    print(type(str(var_ss)))
@@ -114,13 +115,13 @@ for var_ss in m_ss.component_objects(Var, active=True):
     else: 
         ol_index_sets = var_ol.index_set() 
 
-    print(ol_index_sets)
-    print('t in set? ',m.t in ol_index_sets)
-    print('t is idx? ',m.t == ol_index_sets)
+#    print(ol_index_sets)
+#    print('t in set? ',m.t in ol_index_sets)
+#    print('t is idx? ',m.t == ol_index_sets)
 
-    print('var_ol: \t',var_ol)
+#    print('var_ol: \t',var_ol)
     for index in var_ss:
-        print(index)
+#        print(index)
         var_ss_value = var_ss[index].value
         index_type = type(index)
         if index is None:
@@ -129,7 +130,7 @@ for var_ss in m_ss.component_objects(Var, active=True):
                 for t in m.t:
                     ol_index = t
                     var_ol[ol_index].set_value(var_ss_value)
-                print(ol_index)
+#                print(ol_index)
             else: 
                 var_ol.set_value(var_ss_value)
             continue 
@@ -137,13 +138,13 @@ for var_ss in m_ss.component_objects(Var, active=True):
             for t in m.t:
                 ol_index = (index,t)
                 var_ol[ol_index].set_value(var_ss_value)
-            print(ol_index)
+#            print(ol_index)
             continue
         if index_type is tuple:
             for t in m.t:
                 ol_index = index + (t) 
                 var_ol[ol_index].set_value(var_ss_value)
-            print(ol_index)
+#            print(ol_index)
             continue
 
 #        print(type(index))
@@ -162,7 +163,7 @@ for var_ss in m_ss.component_objects(Var, active=True):
 #tuple2 = (tuple1,3)
 #print(tuple2)
 
-#m = alg_update(m,0)
+m = alg_update(m,0)
 
 with open('m_ol_init.txt','w') as f:
     m.display(ostream=f)
