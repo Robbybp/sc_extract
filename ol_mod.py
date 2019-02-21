@@ -159,7 +159,7 @@ m.W4_xF_nom = Param(m.t,initialize=0.019,mutable=True,default=0.019)
 m.xE_IPA = Var(m.set_E_Tray,m.t,within=NonNegativeReals)
 m.yE_IPA = Var(m.set_E_Tray,m.t,within=NonNegativeReals)
 m.xE_F_IPA = Var(m.t,within=NonNegativeReals,initialize=0.019)
-m.yE_S_IPA = Var(m.t,within=NonNegativeReals,initialize=0)
+m.yE_S_IPA = Var(m.t,initialize=0)#within=NonNegativeReals,initialize=0)
 m.FFE = Var(m.t,within=NonNegativeReals,initialize=1.8) # Feed Flow into Extractor
 # ^is this a parameter, state variable, or control variable? 
 # A: uncertain parameter/disturbance
@@ -197,8 +197,10 @@ m.P1_F = Var(within=NonNegativeReals,initialize=100)
 m.P2_F = Var(within=NonNegativeReals,initialize=40)
 
 # Stripping Column:
-m.xS_CO2 = Var(m.set_S_Tray,m.t,within=NonNegativeReals,initialize=0.9)
-m.yS_CO2 = Var(m.set_S_Tray,m.t,within=NonNegativeReals,initialize=0.9)
+m.xS_CO2 = Var(m.set_S_dyn,m.t,within=NonNegativeReals,initialize=0.9)
+m.xS_CO2_5 = Var(m.t,within=NonNegativeReals,initialize=0.9)
+m.yS_CO2 = Var(m.set_S_dyn,m.t,within=NonNegativeReals,initialize=0.9)
+m.yS_CO2_5 = Var(m.t,within=NonNegativeReals,initialize=0.9)
 m.FF_S = Var(m.t,within=NonNegativeReals,initialize=m.FSE_init) # feed flow rate
 m.FL_S = Var(m.t,within=NonNegativeReals,initialize=m.FLS_nom.value) # liquid reflux flow rate
 m.FV_S = Var(m.t,within=NonNegativeReals,initialize=m.FVS_nom.value) # vapor boilup flow rate
@@ -209,7 +211,7 @@ m.FT_S = Var(m.t,within=NonNegativeReals,initialize=m.FTS_nom.value) # flow off 
 m.FD_S = Var(m.t,within=NonNegativeReals,initialize=m.FDS_nom.value) # distillate (solvent) flow rate
 m.F_comp = Var(m.t,within=NonNegativeReals,initialize=m.F_comp_nom.value) # flow rate through compresser 
 m.xF_S = Var(m.t,within=NonNegativeReals) # CO2 fraction of combined (liq & vap) feed to stripper
-m.KS_CO2 = Var(within=NonNegativeReals) # unused
+#m.KS_CO2 = Var(within=NonNegativeReals) # unused
 m.KS_IPA = Var(within=NonNegativeReals,initialize=m.KS_IPA_nom.value)
 m.TS = Var(m.t,within=NonNegativeReals)
 m.PS = Var(within=NonNegativeReals)
@@ -225,7 +227,7 @@ m.V1_cond = Var(m.t,within=NonNegativeReals)
 m.V2_cond = Var(m.t,within=NonNegativeReals)
 
 # Reboiler:
-m.rhoB_CO2 = Var(m.t,within=NonNegativeReals) # Density in kg/m^3
+#m.rhoB_CO2 = Var(m.t,within=NonNegativeReals) # Density in kg/m^3
 m.CpB_CO2 = Var(m.t,within=NonNegativeReals)
 m.TB_sh = Var(m.t,within=NonNegativeReals,initialize=300)
 m.TB_tb_ave = Var(m.t,within=NonNegativeReals,initialize=375)
@@ -273,8 +275,8 @@ m.t.pprint()
 
 # Differential:
 def const_E1_rule(m,t):
-    return m.ME*m.xE_IPAdot[m.NTE,t] == m.FFE[t]*(m.xE_F_IPA[t] - m.xE_IPA[m.NTE,t]) + \
-               m.FSE[t]*(m.yE_IPA[m.NTE-1,t] - m.yE_IPA[m.NTE,t])
+    return m.ME*m.xE_IPAdot[m.NTE.value,t] == m.FFE[t]*(m.xE_F_IPA[t] - m.xE_IPA[m.NTE.value,t]) + \
+               m.FSE[t]*(m.yE_IPA[m.NTE.value-1,t] - m.yE_IPA[m.NTE.value,t])
 m.const_E1 = Constraint(m.t,rule=const_E1_rule)
 
 def const_E2_rule(m,i,t):
@@ -517,14 +519,14 @@ m.const_S6 = Constraint(m.t,rule=const_S6_rule)
 # tray 4:
 def const_S7_rule(m,t): 
     # need to re-calculate xS_CO2[NTS]
-    return m.MS*m.xS_CO2dot[m.NTS-1,t] == \
-                                  m.FL_S[t]*(m.xS_CO2[m.NTS.value,t] - m.xS_CO2[4,t]) + \
+    return m.MS*m.xS_CO2dot[m.NTS.value-1,t] == \
+                                  m.FL_S[t]*(m.xS_CO2_5[t] - m.xS_CO2[4,t]) + \
             (m.FV_S[t] + m.qF[t]*m.FF_S[t])*(m.yS_CO2[3,t] - m.yS_CO2[4,t])
 m.const_S7 = Constraint(m.t,rule=const_S7_rule)
 
 # tray 3 (feed):
 def const_S8_rule(m,t):
-    return m.MS*m.xS_CO2dot[m.NTFS,t] == \
+    return m.MS*m.xS_CO2dot[m.NTFS.value,t] == \
                                   m.FL_S[t]*(m.xS_CO2[4,t] - m.xS_CO2[m.NTFS.value,t]) + \
                                   m.FV_S[t]*(m.yS_CO2[2,t] - m.xS_CO2[m.NTFS.value,t]) + \
             (m.FV_S[t] + m.qF[t]*m.FF_S[t])*(m.xS_CO2[m.NTFS.value,t] - m.yS_CO2[m.NTFS.value,t]) + \
@@ -551,7 +553,7 @@ m.const_S10 = Constraint(m.t,rule=const_S10_rule)
 
 # condenser equations:
 #def const_S11_rule(m):
-#    return (m.FVS+m.qF*m.FFS)*m.yS_CO2[4] + m.FMK == (m.FFS+m.FLS)*m.yS_CO2[5]
+#    return (m.FVS+m.qF*m.FFS)*m.yS_CO2[4] + m.FMK == (m.FFS+m.FLS)*m.yS_CO2_5
 #m.const_S11 = Constraint(rule=const_S11_rule)
 
 def const_S19_rule(m,t):
@@ -565,7 +567,7 @@ m.const_S20 = Constraint(m.t,rule=const_S20_rule)
 def const_S11_rule(m,t):
     # This equation specifies composition in "condenser," after 
     # mixing with make-up CO2 stream
-    return m.FT_S[t]*m.yS_CO2[4,t] + m.FMK[t] == m.F_comp[t]*m.yS_CO2[5,t]
+    return m.FT_S[t]*m.yS_CO2[4,t] + m.FMK[t] == m.F_comp[t]*m.yS_CO2_5[t]
 m.const_S11 = Constraint(m.t,rule=const_S11_rule)
 
 #def const_S12_rule(m): 
@@ -585,9 +587,9 @@ m.const_S13 = Constraint(m.t,rule=const_S13_rule)
 
 # VLE:
 # VLE coefficients obtained from a VLE simulation with PR-EOS in Aspen
-def const_S14_rule(m):
-    return m.KS_CO2 == 1.3
-m.const_S14 = Constraint(rule=const_S14_rule)
+#def const_S14_rule(m):
+#    return m.KS_CO2 == 1.3
+#m.const_S14 = Constraint(rule=const_S14_rule)
 
 def const_S18_rule(m):
     return m.KS_IPA == m.KS_IPA_nom 
@@ -606,7 +608,7 @@ m.const_S16 = Constraint(m.t,rule=const_S16_rule)
 # compositions are the same across phases in the condenser
 # (because they are different 'branches' of the same stream)
 def const_S17_rule(m,t): 
-    return m.yS_CO2[m.NTS.value,t] == m.xS_CO2[m.NTS.value,t]
+    return m.yS_CO2_5[t] == m.xS_CO2_5[t]
 m.const_S17 = Constraint(m.t,rule=const_S17_rule)
 
 # Condenser:
@@ -752,7 +754,7 @@ def const_C11_rule(m,t):
 m.const_C11 = Constraint(m.t,rule=const_C11_rule)
 
 def const_C12_rule(m,t):
-    return m.yC_CO2[t] == m.xS_CO2[m.NTS,t]
+    return m.yC_CO2[t] == m.xS_CO2_5[t]
 m.const_C12 = Constraint(m.t,rule=const_C12_rule)
 
 def const_C13_rule(m,t):
@@ -801,7 +803,9 @@ m.const_init_TC_sh = Constraint(rule=const_init_TC_sh_rule)
 ########################
 
 discretizer = TransformationFactory('dae.collocation')
-discretizer.apply_to(m,nfe=25,ncp=4,scheme='LAGRANGE-RADAU')
+discretizer.apply_to(m,nfe=50,ncp=3,scheme='LAGRANGE-RADAU')
+#discretizer = TransformationFactory('dae.finite_difference')
+#discretizer.apply_to(m,nfe=200,wrt=m.t,scheme='BACKWARD')
 
 # Reduce number of collocation points for control variables 
 # to force them to be piecewise constant 
