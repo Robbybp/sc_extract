@@ -375,28 +375,28 @@ m.const_F5 = Constraint(rule=const_F5_rule)
 #    E = -0.1366
 #    return m.Cp_CO2_v[t] == A+ B*m.TF[t]/1000 + C*(m.TF[t]/1000)**2 + D*(m.TF[t]/1000)**3 + E/(m.TF[t]/1000)**2
 #m.const_F6 = Constraint(m.t,rule=const_F6_rule)
-#
-#def const_F7_rule(m,t):
-#    A =  25.00
-#    B =  55.19
-#    C = -33.69
-#    D =  7.948
-#    E = -0.1366
-#    F = -403.61
-#    H = -393.52
-#    return m.H_CO2_v[t] == A*(m.TF[t]/1000)+B/2*(m.TF[t]/1000)**2+C/3*(m.TF[t]/1000)**3+D/4*(m.TF[t]/1000)**4-E/(m.TF[t]/1000)+F-H
-#m.const_F7 = Constraint(m.t,rule=const_F7_rule)
-#
+
+def const_F7_rule(m,t):
+    A =  25.00
+    B =  55.19
+    C = -33.69
+    D =  7.948
+    E = -0.1366
+    F = -403.61
+    H = -393.52
+    return m.H_CO2_v[t] == A*(m.TF[t]/1000)+B/2*(m.TF[t]/1000)**2+C/3*(m.TF[t]/1000)**3+D/4*(m.TF[t]/1000)**4-E/(m.TF[t]/1000)+F-H
+m.const_F7 = Constraint(m.t,rule=const_F7_rule)
+
 #def const_F8_rule(m,t):
 #    return m.Cp_CO2_l[t] == 195.67 + (m.TF[t]-310)*10.18
 #m.const_F8 = Constraint(m.t,rule=const_F8_rule)
 #
-#
-#def const_F9_rule(m,t): 
-#    H_CO2_l_298 = ((195.67-310*10.18)*298.15 + 10.18/2*298.15**2)/1000
-#    return m.H_CO2_l[t] == ((195.67-310*10.18)*m.TF[t] + 10.18/2*m.TF[t]**2)/1000 - H_CO2_l_298
-#m.const_F9 = Constraint(m.t,rule=const_F9_rule)
-#
+
+def const_F9_rule(m,t): 
+    H_CO2_l_298 = ((195.67-310*10.18)*298.15 + 10.18/2*298.15**2)/1000
+    return m.H_CO2_l[t] == ((195.67-310*10.18)*m.TF[t] + 10.18/2*m.TF[t]**2)/1000 - H_CO2_l_298
+m.const_F9 = Constraint(m.t,rule=const_F9_rule)
+
 #def const_F10_rule(m,t):
 #    return m.Cp_IPA_v[t] == 89.74+ (m.TF[t]-300)*0.219
 #m.const_F10 = Constraint(m.t,rule=const_F10_rule)
