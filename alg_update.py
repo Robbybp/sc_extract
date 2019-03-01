@@ -307,7 +307,7 @@ def alg_update(m,t):
     m.TC_tb_out[t].set_value( 2*m.TC_tb_ave[t].value - m.TC_tb_in[t].value )
     m.TC_sh_out[t].set_value( 2*m.TC_sh_ave[t].value - m.TC_sh_in[t].value )
     m.CpC_CO2[t].set_value( m.CpB_CO2[t].value )
-    m.CpC_H2O[t].set_value( 36.9 )
+    m.CpC_H2O[t].set_value( m.CpC_H2O_nom.value )
     m.yC_CO2[t].set_value( m.xS_CO2_5[t].value )
     m.yC_IPA[t].set_value( m.yE_S_IPA[t].value )
 
