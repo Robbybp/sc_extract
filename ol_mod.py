@@ -49,8 +49,8 @@ m.U_ov_B = Param(initialize=360) # overall heat transfer coefficient in reboiler
 V_B_tb = m.LTB*m.NTB*3.14159265*(m.DTB/2)**2
 m.V_B_tb = Param(initialize=V_B_tb)
 
-m.CpB_CO2_nom = 69.4 # kg/kmol/K
-m.rho_B_CO2_nom = 23.4 # kmol/m^3
+m.CpB_CO2_nom = Param(initialize=69.4) # kg/kmol/K
+m.rho_B_CO2_nom = Param(initialize=23.4) # kmol/m^3
 
 print('B, tube',m.rho_B_CO2_nom*m.V_B_tb)
 
@@ -78,8 +78,8 @@ m.V_C_tb = Param(initialize=V_C_tb)
 V_C_sh = m.LTC*3.14159265*(m.D_C_sh/2)**2 - V_C_tb
 m.V_C_sh = Param(initialize=V_C_sh)
 
-m.CpC_H2O_nom = 72.5 # kg/kmol/K
-m.rho_C_H2O_nom = 56.3 # kmol/m^3
+m.CpC_H2O_nom = Param(initialize=72.5) # kg/kmol/K
+m.rho_C_H2O_nom = Param(initialize=56.3) # kmol/m^3
 
 print('C, tube',m.rho_B_CO2_nom*m.V_C_tb)
 print('C, shell',m.rho_C_H2O_nom*m.V_C_sh)
@@ -264,7 +264,7 @@ m.TB_tb_out = Var(m.t,within=NonNegativeReals,initialize=350)
 m.dH_IPA = Var(within=NonNegativeReals)
 m.dH_CO2 = Var(within=NonNegativeReals)
 m.dH_B = Var(m.t,within=NonNegativeReals) # Latent heat of evap of liquid from stripper 
-m.Pvap_B_CO2 = Var(m.t,within=NonNegativeReals)
+#m.Pvap_B_CO2 = Var(m.t,within=NonNegativeReals)
 m.Pvap_B_IPA = Var(m.t,within=NonNegativeReals,initialize=0.84)
 m.P_B = Var(within=NonNegativeReals,initialize=40)
 m.F_B = Var(m.t,within=NonNegativeReals,initialize=3.0)
@@ -350,6 +350,10 @@ m.const_E9 = Constraint(m.t,rule=const_E9_rule)
 # this constraint is deactivated because flow of solvent to extractor should equal 
 # flow rate out of the cooler, always, and only necessarily must equal the nominal value of 
 # 7.75 kmol/hr at t=0 (this initial condition still must be specified somewhere...)
+# 
+# ^ wrong, the solvent flow rate is dependent on V, L, Mk, and qF
+# a purely algebraic variable, should not be given its own initial condition
+
 #def const_E10_rule(m,t):
 #    return m.FSE[t] == m.FSE_init
 #m.const_E10 = Constraint(m.t,rule=const_E10_rule)

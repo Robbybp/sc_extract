@@ -322,9 +322,10 @@ def const_E9_rule(m):
     return m.FFE == m.W3_F 
 m.const_E9 = Constraint(rule=const_E9_rule)
 
-def const_E10_rule(m):
-    return m.FSE == m.FSE_init 
-m.const_E10 = Constraint(rule=const_E10_rule)
+#def const_E10_rule(m):
+#    return m.FSE == m.FSE_init 
+#m.const_E10 = Constraint(rule=const_E10_rule)
+
 #def const_E11_rule(m):
 #    return m.yE_S_IPA == m.yE_S_sp
 #m.const_E11 = Constraint(rule=const_E11_rule)
@@ -736,9 +737,9 @@ def const_C9_rule(m):
 m.const_C9 = Constraint(rule=const_C9_rule)
 
 # input-defining constraint:
-#def const_C10_rule(m):
-#    return m.F_C_H2O == m.U3_Fcool 
-#m.const_C10 = Constraint(rule=const_C10_rule)
+def const_C10_rule(m):
+    return m.F_C_H2O == m.U3_Fcool 
+m.const_C10 = Constraint(rule=const_C10_rule)
 
 def const_C11_rule(m):
     return 0 == m.F_C_H2O*m.CpC_H2O*(m.TC_sh_out-m.TC_sh_in) - m.U_ov_C*m.A_C*(m.TC_tb_ave-m.TC_sh_ave)
@@ -757,13 +758,13 @@ def const_C14_rule(m):
     return m.yC_IPA == m.yE_S_IPA
 m.const_C14 = Constraint(rule=const_C14_rule)
 
-#def const_C15_rule(m):
-#    return m.F_C == m.FSE
+def const_C15_rule(m):
+    return m.F_C == m.FSE
     #return m.FSE == m.FMK + m.FT_S - m.FD_S
     #return m.FMK + m.FV_S == m.FL_S
     #return m.FMK == m.FL_S-m.FV_S+(1-m.qF)*m.FF_S
-#m.const_C15 = Constraint(rule=const_C15_rule)
-
+m.const_C15 = Constraint(rule=const_C15_rule)
+# ^ is this redundant?
 
 ###################
 ### objective #####
@@ -773,8 +774,9 @@ m.const_C14 = Constraint(rule=const_C14_rule)
 #m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2+(m.TC_tb_out-m.TE_sp)**2)
 #m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2+(m.yE_S_IPA-(m.xS_CO2_5)**2 ))
 #m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2)
-m.obj_ss = Objective(sense=minimize,expr=(m.F_C_H2O-m.U3_Fcool)**2)
-#m.obj_ss = Objective(sense=minimize,expr=0.0)
+#m.obj_ss = Objective(sense=minimize,expr=(m.F_C_H2O-m.U3_Fcool)**2)
+# ^ could do this with every input (/disturbance)
+m.obj_ss = Objective(sense=minimize,expr=0.0)
 
 
 

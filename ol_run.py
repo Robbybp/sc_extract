@@ -163,7 +163,7 @@ for var_ss in m_ss.component_objects(Var, active=True):
 #tuple2 = (tuple1,3)
 #print(tuple2)
 
-#m = alg_update(m,0)
+m = alg_update(m,0)
 
 with open('m_ol_init.txt','w') as f:
     m.display(ostream=f)
