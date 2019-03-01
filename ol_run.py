@@ -11,7 +11,7 @@ from alg_update import alg_update
 
 u_vec = { 1 : 0.7185,
           2 : 1.0,
-          3 : 22.661805 }
+          3 : 42.83 }
 
 w_vec = { 1 : 0.322074,
           2 : 293,
@@ -163,7 +163,7 @@ for var_ss in m_ss.component_objects(Var, active=True):
 #tuple2 = (tuple1,3)
 #print(tuple2)
 
-m = alg_update(m,0)
+#m = alg_update(m,0)
 
 with open('m_ol_init.txt','w') as f:
     m.display(ostream=f)

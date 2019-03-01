@@ -16,6 +16,10 @@ m.t = ContinuousSet(bounds=(0,5)) # solve nmpc opt problem over 5 hours
 
 # Parameters
 
+# constant parameters:
+m.MW_H2O = 18.03
+m.MW_CO2 = 44.00
+
 # Extractor Parameters:
 m.NTE = Param(initialize=4) # (integer)
 m.ME = Param(initialize=0.25) # kmol, steady state holdup
@@ -42,12 +46,24 @@ m.A_B = Param(initialize=A_B)
 Vol_B = m.LTB*m.A_cr_B
 m.Vol_B = Param(initialize=Vol_B)
 m.U_ov_B = Param(initialize=360) # overall heat transfer coefficient in reboiler, kJ/h/m^2/K
+V_B_tb = m.LTB*m.NTB*3.14159265*(m.DTB/2)**2
+m.V_B_tb = Param(initialize=V_B_tb)
+
+m.CpB_CO2_nom = 69.4 # kg/kmol/K
+m.rho_B_CO2_nom = 23.4 # kmol/m^3
+
+print('B, tube',m.rho_B_CO2_nom*m.V_B_tb)
+
 
 # Trim-cooler Parameters:
 m.LTC = Param(initialize=1.15) # tube length, meters
 m.NTC = Param(initialize=38) # number of tubes
+D_C_sh = 14*0.0254
+m.D_C_sh = Param(initialize=D_C_sh)
 DTC = 0.5*0.0254
 m.DTC = Param(initialize=DTC) # tube diameter, (inches->) meters
+DTC_outer = 0.6*0.0254
+m.DTC_outer = Param(initialize=DTC_outer)
 ACrC = m.NTC*0.25*3.1416*m.DTC**2
 m.ACrC = Param(initialize=ACrC)
 A_C = m.NTC*3.1416*m.LTC*m.DTC # total area of heat transfer in cooler
@@ -55,7 +71,18 @@ m.A_C = Param(initialize=A_C)
 m.A_C.pprint()
 VolC = m.ACrC*m.LTC
 m.VolC = Param(initialize=VolC) 
-m.U_ov_C = Param(initialize=360) 
+m.U_ov_C = Param(initialize=360*1.5)
+#m.U_ov_C = Param(initialize=360) 
+V_C_tb = m.NTC*m.LTC*3.14159265*(m.DTC/2)**2
+m.V_C_tb = Param(initialize=V_C_tb)
+V_C_sh = m.LTC*3.14159265*(m.D_C_sh/2)**2 - V_C_tb
+m.V_C_sh = Param(initialize=V_C_sh)
+
+m.CpC_H2O_nom = 72.5 # kg/kmol/K
+m.rho_C_H2O_nom = 56.3 # kmol/m^3
+
+print('C, tube',m.rho_B_CO2_nom*m.V_C_tb)
+print('C, shell',m.rho_C_H2O_nom*m.V_C_sh)
 
 ############
 ### Sets ###
@@ -102,7 +129,8 @@ m.P2_cond_nom = Param(initialize=100) # atm
 # Uncertain parameters in reboiler:
 m.dH_IPA_nom = Param(initialize=44000)
 m.dH_CO2_nom = Param(initialize=15326)
-m.CpB_CO2_nom = Param(initialize=40.0)
+#m.CpB_CO2_nom = Param(initialize=40.0)
+#m.CpC_H2O_nom = 
 
 ### State initial conditions ###
 
@@ -227,7 +255,7 @@ m.V1_cond = Var(m.t,within=NonNegativeReals)
 m.V2_cond = Var(m.t,within=NonNegativeReals)
 
 # Reboiler:
-#m.rhoB_CO2 = Var(m.t,within=NonNegativeReals) # Density in kg/m^3
+m.rho_B_CO2 = Var(m.t,within=NonNegativeReals,initialize=m.rho_B_CO2_nom) # Density in kmol/m^3
 m.CpB_CO2 = Var(m.t,within=NonNegativeReals)
 m.TB_sh = Var(m.t,within=NonNegativeReals,initialize=300)
 m.TB_tb_ave = Var(m.t,within=NonNegativeReals,initialize=375)
@@ -245,7 +273,8 @@ m.F_B_bypass = Var(m.t,within=NonNegativeReals,initialize=4.5)
 m.TB_tb_avedot = DerivativeVar(m.TB_tb_ave,wrt=m.t,initialize=0)
 
 # Cooler:
-m.rhoC_CO2 = Var(m.t,within=NonNegativeReals)
+m.rho_C_CO2 = Var(m.t,within=NonNegativeReals,initialize=m.rho_B_CO2_nom)
+m.rho_C_H2O = Var(m.t,within=NonNegativeReals,initialize=m.rho_C_H2O_nom)
 m.CpC_CO2 = Var(m.t,within=NonNegativeReals,initialize=40)
 m.CpC_H2O = Var(m.t,within=NonNegativeReals,initialize=36.9)
 # tube=solvent, shell=coolant
@@ -256,7 +285,7 @@ m.TC_sh_in = Var(m.t,within=NonNegativeReals,initialize=293)
 m.TC_sh_out = Var(m.t,within=NonNegativeReals,initialize=306)
 m.TC_sh_ave = Var(m.t,within=NonNegativeReals,initialize=299)
 m.F_C = Var(m.t,within=NonNegativeReals,initialize=7.7)
-m.F_C_H2O = Var(m.t,within=NonNegativeReals,initialize=22.25)
+m.F_C_H2O = Var(m.t,within=NonNegativeReals,bounds=(10,50),initialize=43)
 m.yC_IPA = Var(m.t,within=NonNegativeReals,initialize=0.0005)
 m.yC_CO2 = Var(m.t,within=NonNegativeReals,initialize=1)
 
@@ -514,7 +543,7 @@ m.const_S6 = Constraint(m.t,rule=const_S6_rule)
 # differential
 # (mass balance)
 
-# No "differential" mass balance for top tray (condenser)
+# No differential mass balance for top tray (condenser)
 
 # tray 4:
 def const_S7_rule(m,t): 
@@ -673,7 +702,7 @@ m.const_B6 = Constraint(m.t,rule=const_B6_rule)
 
 # energy balance for temperature dynamics, really should be a PDE...
 def const_B7_rule(m,t):
-    return m.F_B[t]*m.CpB_CO2[t]*m.TB_tb_avedot[t] == \
+    return m.V_B_tb*m.rho_B_CO2[t]*m.CpB_CO2[t]*m.TB_tb_avedot[t] == \
             m.CpB_CO2[t]*m.F_B[t]*(m.TB_tb_in[t]-m.TB_tb_out[t]) \
             + m.U_ov_B*m.A_B*(m.TB_sh[t] - m.TB_tb_ave[t])
 m.const_B7 = Constraint(m.t,rule=const_B7_rule)
@@ -682,6 +711,10 @@ m.const_B7 = Constraint(m.t,rule=const_B7_rule)
 def const_B8_rule(m,t):
     return m.CpB_CO2[t] == m.CpB_CO2_nom
 m.const_B8 = Constraint(m.t,rule=const_B8_rule)
+
+def const_B13_rule(m,t):
+    return m.rho_B_CO2[t] == m.rho_B_CO2_nom
+m.const_B13 = Constraint(m.t,rule=const_B13_rule)
 
 def const_B9_rule(m,t):
     return m.TB_tb_in[t] == m.T2_cond[t]
@@ -722,17 +755,26 @@ def const_C5_rule(m,t):
     return m.CpC_CO2[t] == m.CpB_CO2[t]
 m.const_C5 = Constraint(m.t,rule=const_C5_rule)
 
+def const_C16_rule(m,t):
+    return m.rho_C_CO2[t] == m.rho_B_CO2[t]
+m.const_C16 = Constraint(m.t,rule=const_C16_rule)
+
+
 # assuming heat capacity of stream is that of CO2
 # Really should be a PDE...
 def const_C6_rule(m,t):
-    return m.CpC_CO2[t]*m.F_C[t]*m.TC_tb_avedot[t] == \
+    return m.rho_C_CO2[t]*m.V_C_tb*m.CpC_CO2[t]*m.TC_tb_avedot[t] == \
             m.F_C[t]*m.CpC_CO2[t]*(m.TC_tb_in[t] - m.TC_tb_out[t]) + \
             m.U_ov_C*m.A_C*       (m.TC_sh_ave[t] - m.TC_tb_ave[t])
 m.const_C6 = Constraint(m.t,rule=const_C6_rule)
 
 def const_C7_rule(m,t):
-    return m.CpC_H2O[t] == 36.9
+    return m.CpC_H2O[t] == m.CpC_H2O_nom
 m.const_C7 = Constraint(m.t,rule=const_C7_rule)
+
+def const_C17_rule(m,t):
+    return m.rho_C_H2O[t] == m.rho_C_H2O_nom
+m.const_C17 = Constraint(m.t,rule=const_C17_rule)
 
 def const_C8_rule(m,t):
     return m.TC_sh_in[t] == m.W2_Tcool[t]
@@ -742,13 +784,13 @@ def const_C9_rule(m,t):
     return 2*m.TC_sh_ave[t] == m.TC_sh_in[t] + m.TC_sh_out[t]
 m.const_C9 = Constraint(m.t,rule=const_C9_rule)
 
-def const_C10_rule(m,t):
-    return m.F_C_H2O[t] == m.U3_Fcool[t]
-m.const_C10 = Constraint(m.t,rule=const_C10_rule)
+#def const_C10_rule(m,t):
+#    return m.F_C_H2O[t] == m.U3_Fcool[t]
+#m.const_C10 = Constraint(m.t,rule=const_C10_rule)
 
 # Really should be a PDE...
 def const_C11_rule(m,t):
-    return m.CpC_H2O[t]*m.F_C_H2O[t]*m.TC_sh_avedot[t] == \
+    return m.rho_C_H2O[t]*m.V_C_sh*m.CpC_H2O[t]*m.TC_sh_avedot[t] == \
             m.F_C_H2O[t]*m.CpC_H2O[t]*(m.TC_sh_in[t] - m.TC_sh_out[t]) + \
             m.U_ov_C*m.A_C           *(m.TC_tb_ave[t] - m.TC_sh_ave[t])
 m.const_C11 = Constraint(m.t,rule=const_C11_rule)
@@ -822,4 +864,6 @@ discretizer.apply_to(m,nfe=50,ncp=3,scheme='LAGRANGE-RADAU')
 #m.obj_ss = Objective(sense=minimize,expr=(m.TC_tb_out-313.0)**2)
 # needs to be adjusted to sum over all time? Or not because I have degrees of freedom now...?
 #m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2+(m.TC_tb_out-313.0)**2)
-m.obj_ss = Objective(sense=minimize,expr=0.0)
+#m.obj_ss = Objective(sense=minimize,expr=0.0)
+#m.obj_ol = Objective(sense=minimize,expr= sum((m.TE[t] - 313.0)**2 for t in m.t) )
+m.obj_ol = Objective(sense=minimize,expr= sum((m.U3_Fcool[t] - m.F_C_H2O[t])**2 for t in m.t) )

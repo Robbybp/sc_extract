@@ -15,8 +15,11 @@ m.t = ContinuousSet(bounds=(0,300)) # solve nmpc opt problem over 5 hours
 
 # Parameters
 
+# constant parameters:
+m.MW_H2O = 18.03
+m.MW_CO2 = 44.00
+
 # heat capacities at 40 C, 102 atm
-m.Cp_H20_L = 4.186
 
 # Extractor Parameters:
 m.NTE = Param(initialize=4) # (integer)
@@ -33,6 +36,7 @@ m.MBS = Param(initialize=0.25) # reboiler holdup
 m.EMVS = Param(initialize=0.80) # 
 
 # Reboiler Parameters:
+#m.LTB = Param(initialize=0.18) # tube length, meters
 m.LTB = Param(initialize=0.365) # tube length, meters
 m.NTB = Param(initialize=34) # number of tubes
 DTB = 0.5*0.0254
@@ -41,15 +45,23 @@ A_cr_B = m.NTB*0.25*3.1416*m.DTB**2
 m.A_cr_B = Param(initialize=A_cr_B)
 A_B = m.LTB*m.NTB*3.1416*m.DTB
 m.A_B = Param(initialize=A_B)
+V_B_tb = m.LTB*m.NTB*3.14159265*(m.DTB/2)**2
+m.V_B_tb = Param(initialize=V_B_tb)
 print('A_B: \t'+str(m.A_B.value))
 print('A_cr: \t' + str(m.A_cr_B.value))
 Vol_B = m.LTB*m.A_cr_B
 m.Vol_B = Param(initialize=Vol_B)
 m.U_ov_B = Param(initialize=360) # overall heat transfer coefficient in reboiler, kJ/h/m^2/K
 
+#m.CpB_CO2_nom = 40.0 # kg/kmol/K
+m.CpB_CO2_nom = 69.4 # kg/kmol/K
+m.rho_B_CO2_nom = 23.4 # kmol/m^3
+
 # Trim-cooler Parameters:
 m.LTC = Param(initialize=1.15) # tube length, meters
 m.NTC = Param(initialize=38) # number of tubes
+D_C_sh = 14*0.0254
+m.D_C_sh = Param(initialize=D_C_sh) # shell diameter, inches
 DTC = 0.5*0.0254
 m.DTC = Param(initialize=DTC) # tube diameter, (inches->) meters
 ACrC = m.NTC*0.25*3.1416*m.DTC**2
@@ -57,9 +69,19 @@ m.ACrC = Param(initialize=ACrC)
 A_C = m.NTC*3.1416*m.LTC*m.DTC # total area of heat transfer in cooler
 m.A_C = Param(initialize=A_C)
 m.A_C.pprint()
-VolC = m.ACrC*m.LTC
-m.VolC = Param(initialize=VolC) 
-m.U_ov_C = Param(initialize=360) 
+V_C = m.ACrC*m.LTC
+m.VolC = Param(initialize=V_C) 
+m.U_ov_C = Param(initialize=360*1.5) 
+#m.U_ov_C = Param(initialize=360) 
+V_C_tb = m.NTC*m.LTC*3.14159265*(m.DTC/2)**2
+m.V_C_tb = Param(initialize=V_C_tb)
+V_C_sh = m.LTC*3.14159265*(m.D_C_sh/2)**2 - V_C_tb
+m.V_C_sh = Param(initialize=V_C_sh)
+
+#m.CpC_H2O_nom = 36.9 # kg/kmol/K
+m.CpC_H2O_nom = 72.5 # kg/kmol/K
+m.rho_C_H2O_nom = 56.3 # kmol/m^3
+
 
 ############
 ### Sets ###
@@ -210,33 +232,41 @@ m.V2_cond = Var(within=NonNegativeReals,initialize=3)
 
 # Reboiler:
 #m.rhoB_CO2 = Var(within=NonNegativeReals) # Density in kg/m^3
-m.CpB_CO2 = Var(within=NonNegativeReals,initialize=40)
+m.CpB_CO2 = Var(within=NonNegativeReals,initialize=m.CpB_CO2_nom)
 m.TB_sh = Var(within=NonNegativeReals,initialize=300)
+#m.TB_tb_ave = Var(within=NonNegativeReals,initialize=413.4)
 m.TB_tb_ave = Var(within=NonNegativeReals,initialize=375)
-m.TB_tb_in = Var(within=NonNegativeReals,initialize=460)
-m.TB_tb_out = Var(within=NonNegativeReals,initialize=350)
+m.TB_tb_in = Var(within=NonNegativeReals,initialize=440.9)
+#m.TB_tb_in = Var(within=NonNegativeReals,initialize=440.9)
+m.TB_tb_out = Var(within=NonNegativeReals,initialize=385)
+#m.TB_tb_out = Var(within=NonNegativeReals,initialize=385)
 m.dH_IPA = Var(within=NonNegativeReals,initialize=44000)
 m.dH_CO2 = Var(within=NonNegativeReals,initialize=15326)
 m.dH_B = Var(within=NonNegativeReals,initialize=15500) # Latent heat of evap of liquid from stripper 
 #m.Pvap_B_CO2 = Var(within=NonNegativeReals)
 m.Pvap_B_IPA = Var(within=NonNegativeReals,initialize=0.84)
 m.P_B = Var(within=NonNegativeReals,initialize=40)
-m.F_B = Var(within=NonNegativeReals,initialize=3.0)
-m.F_B_bypass = Var(within=NonNegativeReals,initialize=4.5)
+m.F_B = Var(within=NonNegativeReals,initialize=2.898)
+m.F_B_bypass = Var(within=NonNegativeReals,initialize=4.8)
 
 # Cooler:
 #m.rhoC_CO2 = Var(within=NonNegativeReals)
-m.CpC_CO2 = Var(within=NonNegativeReals,initialize=40)
-m.CpC_H2O = Var(within=NonNegativeReals,initialize=36.9)
+m.CpC_CO2 = Var(within=NonNegativeReals,initialize=m.CpB_CO2_nom)
+m.CpC_H2O = Var(within=NonNegativeReals,initialize=m.CpC_H2O_nom)
 # tube=solvent, shell=coolant
-m.TC_tb_in = Var(within=NonNegativeReals,initialize=424)
-m.TC_tb_ave = Var(within=NonNegativeReals,initialize=369)
+#m.TC_tb_in = Var(within=NonNegativeReals,initialize=424)
+m.TC_tb_in = Var(within=NonNegativeReals,initialize=417)
+#m.TC_tb_ave = Var(within=NonNegativeReals,initialize=369)
+m.TC_tb_ave = Var(within=NonNegativeReals,initialize=365)
 m.TC_tb_out = Var(within=NonNegativeReals,initialize=313)
 m.TC_sh_in = Var(within=NonNegativeReals,initialize=293)
-m.TC_sh_out = Var(within=NonNegativeReals,initialize=306)
-m.TC_sh_ave = Var(within=NonNegativeReals,initialize=299)
+#m.TC_sh_out = Var(within=NonNegativeReals,initialize=306)
+m.TC_sh_out = Var(within=NonNegativeReals,initialize=327)
+m.TC_sh_ave = Var(within=NonNegativeReals,initialize=310)
+#m.TC_sh_ave = Var(within=NonNegativeReals,initialize=299)
 m.F_C = Var(within=NonNegativeReals,initialize=7.7)
-m.F_C_H2O = Var(within=NonNegativeReals,initialize=22.25)
+#m.F_C_H2O = Var(within=NonNegativeReals,initialize=22.25)
+m.F_C_H2O = Var(within=NonNegativeReals,initialize=42.83)
 m.yC_IPA = Var(within=NonNegativeReals,initialize=0.0005)
 m.yC_CO2 = Var(within=NonNegativeReals,initialize=1)
 
@@ -641,9 +671,11 @@ m.const_B6 = Constraint(rule=const_B6_rule)
 def const_B7_rule(m):
     return 0 == m.FV_S*m.dH_B - m.U_ov_B*m.A_B*(m.TB_tb_ave - m.TB_sh)
 m.const_B7 = Constraint(rule=const_B7_rule)
+m.U_ov_B.pprint()
+m.A_B.pprint()
 
 def const_B8_rule(m):
-    return m.CpB_CO2 == 40.0
+    return m.CpB_CO2 == m.CpB_CO2_nom 
 m.const_B8 = Constraint(rule=const_B8_rule)
 
 def const_B9_rule(m):
@@ -688,9 +720,11 @@ m.const_C5 = Constraint(rule=const_C5_rule)
 def const_C6_rule(m):
     return 0 == m.F_C*m.CpC_CO2*(m.TC_tb_in-m.TC_tb_out) - m.U_ov_C*m.A_C*(m.TC_tb_ave-m.TC_sh_ave)
 m.const_C6 = Constraint(rule=const_C6_rule)
+m.U_ov_C.pprint()
+m.A_C.pprint()
 
 def const_C7_rule(m):
-    return m.CpC_H2O == 36.9
+    return m.CpC_H2O == m.CpC_H2O_nom 
 m.const_C7 = Constraint(rule=const_C7_rule)
 
 def const_C8_rule(m):
@@ -702,9 +736,9 @@ def const_C9_rule(m):
 m.const_C9 = Constraint(rule=const_C9_rule)
 
 # input-defining constraint:
-def const_C10_rule(m):
-    return m.F_C_H2O == m.U3_Fcool 
-m.const_C10 = Constraint(rule=const_C10_rule)
+#def const_C10_rule(m):
+#    return m.F_C_H2O == m.U3_Fcool 
+#m.const_C10 = Constraint(rule=const_C10_rule)
 
 def const_C11_rule(m):
     return 0 == m.F_C_H2O*m.CpC_H2O*(m.TC_sh_out-m.TC_sh_in) - m.U_ov_C*m.A_C*(m.TC_tb_ave-m.TC_sh_ave)
@@ -737,8 +771,10 @@ m.const_C14 = Constraint(rule=const_C14_rule)
 
 #m.obj_ss = Objective(sense=minimize,expr=(m.TC_tb_out-313.0)**2)
 #m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2+(m.TC_tb_out-m.TE_sp)**2)
+#m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2+(m.yE_S_IPA-(m.xS_CO2_5)**2 ))
 #m.obj_ss = Objective(sense=minimize,expr=(m.F_C-m.FSE)**2)
-m.obj_ss = Objective(sense=minimize,expr=0.0)
+m.obj_ss = Objective(sense=minimize,expr=(m.F_C_H2O-m.U3_Fcool)**2)
+#m.obj_ss = Objective(sense=minimize,expr=0.0)
 
 
 
