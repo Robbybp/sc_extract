@@ -133,8 +133,8 @@ def alg_update(m,t):
     m.yS_CO2[4,t].set_value( 1- m.KS_IPA.value*m.EMVS.value * (1 - m.xS_CO2[4,t].value) - \
             (1 - m.yS_CO2[3,t].value) * (1 - m.EMVS.value) )
 
-    m.xS_CO2[5,t].set_value( 1 - m.yE_S_IPA[t].value )
-    m.yS_CO2[5,t].set_value( m.xS_CO2[5,t].value )
+    m.xS_CO2_5[t].set_value( 1 - m.yE_S_IPA[t].value )
+    m.yS_CO2_5[t].set_value( m.xS_CO2_5[t].value )
 
 
     # Extractor VLE
@@ -308,7 +308,7 @@ def alg_update(m,t):
     m.TC_sh_out[t].set_value( 2*m.TC_sh_ave[t].value - m.TC_sh_in[t].value )
     m.CpC_CO2[t].set_value( m.CpB_CO2[t].value )
     m.CpC_H2O[t].set_value( 36.9 )
-    m.yC_CO2[t].set_value( m.xS_CO2[m.NTS,t].value )
+    m.yC_CO2[t].set_value( m.xS_CO2_5[t].value )
     m.yC_IPA[t].set_value( m.yE_S_IPA[t].value )
 
 
