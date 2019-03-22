@@ -1,0 +1,20 @@
+Model unknown
+
+  Variables:
+    qF : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :  None : 0.9947646889074688 :  None : False : False :  Reals
+    yS : Size=1, Index=None
+        Key  : Lower : Value                 : Upper : Fixed : Stale : Domain
+        None :  None : 0.0002031548077457058 :  None : False : False :  Reals
+
+  Objectives:
+    None
+
+  Constraints:
+    const_1 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_2 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -1.6539147829064405e-10 :   0.0

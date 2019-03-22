@@ -1,0 +1,6 @@
+# options for steady state run
+
+print_user_options yes
+print_level 5
+#halt_on_ampl_error yes
+print_info_string yes

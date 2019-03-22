@@ -1,0 +1,38 @@
+Model unknown
+
+  Variables:
+    TF : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :  None : 354.6692624389842 :  None : False : False :  Reals
+    H_CO2_l : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :  None : 20.50776284651016 :  None : False : False :  Reals
+    H_CO2_v : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :  None : 2.153488108441453 :  None : False : False :  Reals
+    H_IPA_l : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :  None : 9.992384111635841 :  None : False : False :  Reals
+    H_IPA_v : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :  None : 5.398929591515014 :  None : False : False :  Reals
+
+  Objectives:
+    None
+
+  Constraints:
+    const_1 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -2.6201263381153694e-14 :   0.0
+    const_2 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -4.490630090003833e-12 :   0.0
+    const_3 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -3.4638958368304884e-13 :   0.0
+    const_4 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -9.947598300641403e-14 :   0.0
+    const_5 : Size=1
+        Key  : Lower              : Body              : Upper
+        None : 2.2367509641032375 : 2.236750964103238 : 2.2367509641032375

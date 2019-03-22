@@ -1,0 +1,480 @@
+Model unknown
+
+  Variables:
+    xE_IPA : Size=4, Index=set_E_Tray
+        Key : Lower : Value                 : Upper : Fixed : Stale : Domain
+          1 :     0 : 0.0021474988213822203 :  None : False : False : NonNegativeReals
+          2 :     0 :  0.004196041653587796 :  None : False : False : NonNegativeReals
+          3 :     0 :  0.007288120327263316 :  None : False : False : NonNegativeReals
+          4 :     0 :  0.011955316137737697 :  None : False : False : NonNegativeReals
+    yE_IPA : Size=4, Index=set_E_Tray
+        Key : Lower : Value                 : Upper : Fixed : Stale : Domain
+          1 :     0 : 0.0006789412527266834 :  None : False : False : NonNegativeReals
+          2 :     0 :  0.001397095446603868 :  None : False : False : NonNegativeReals
+          3 :     0 :  0.002481080234401681 :  None : False : False : NonNegativeReals
+          4 :     0 :   0.00411725117121004 :  None : False : False : NonNegativeReals
+    xE_F_IPA : Size=1, Index=None
+        Key  : Lower : Value               : Upper : Fixed : Stale : Domain
+        None :     0 : 0.01899999999995807 :  None : False : False : NonNegativeReals
+    yE_S_IPA : Size=1, Index=None
+        Key  : Lower : Value                  : Upper : Fixed : Stale : Domain
+        None :     0 : 0.00020315464392842107 :  None : False : False : NonNegativeReals
+    FFE : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 1.7999999999999998 :  None : False : False : NonNegativeReals
+    FSE : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 7.7500649025893615 :  None : False : False : NonNegativeReals
+    KE_IPA : Size=1, Index=None
+        Key  : Lower : Value               : Upper : Fixed : Stale : Domain
+        None :     0 : 0.39000570372077387 :  None : False : False : NonNegativeReals
+    TE : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 312.99714813961276 :  None : False : False : NonNegativeReals
+    FFF : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 7.750064902589368 :  None : False : False : NonNegativeReals
+    qF : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.9947646890045402 :  None : False : False : NonNegativeReals
+    xF_IPA : Size=1, Index=None
+        Key  : Lower : Value               : Upper : Fixed : Stale : Domain
+        None :     0 : 0.23300970873802884 :  None : False : False : NonNegativeReals
+    xF_CO2 : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 0.766990291261971 :  None : False : False : NonNegativeReals
+    yF_IPA : Size=1, Index=None
+        Key  : Lower : Value                 : Upper : Fixed : Stale : Domain
+        None :     0 : 0.0029126213594334108 :  None : False : False : NonNegativeReals
+    yF_CO2 : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.9970873786405666 :  None : False : False : NonNegativeReals
+    KF_CO2 : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 1.300000000000002 :  None : False : False : NonNegativeReals
+    KF_IPA : Size=1, Index=None
+        Key  : Lower : Value               : Upper : Fixed : Stale : Domain
+        None :     0 : 0.01250000000004549 :  None : False : False : NonNegativeReals
+    H_CO2_l : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :  None : 20.20586481473368 :  None : False : False :  Reals
+    H_CO2_v : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :  None : 2.1454766258158333 :  None : False : False :  Reals
+    H_CO2_E : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :  None : 2.236113897059231 :  None : False : False :  Reals
+    H_IPA_l : Size=1, Index=None
+        Key  : Lower : Value            : Upper : Fixed : Stale : Domain
+        None :  None : 9.90232237750319 :  None : False : False :  Reals
+    H_IPA_v : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :  None : 5.352684843891248 :  None : False : False :  Reals
+    H_IPA_E : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :  None : 2.3910444515851625 :  None : False : False :  Reals
+    TF : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 354.21437858358956 :  None : False : False : NonNegativeReals
+    P1_F : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 : 100.0 :  None : False : False : NonNegativeReals
+    P2_F : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  40.0 :  None : False : False : NonNegativeReals
+    xS_CO2_5 : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.9997968453557997 :  None : False : False : NonNegativeReals
+    xS_CO2 : Size=4, Index=set_S_dyn
+        Key : Lower : Value              : Upper : Fixed : Stale : Domain
+          1 :     0 : 0.9058151166598059 :  None : False : False : NonNegativeReals
+          2 :     0 : 0.9694630922156482 :  None : False : False : NonNegativeReals
+          3 :     0 : 0.9702119648957724 :  None : False : False : NonNegativeReals
+          4 :     0 : 0.9957431059453259 :  None : False : False : NonNegativeReals
+    yS_CO2 : Size=4, Index=set_S_dyn
+        Key : Lower : Value              : Upper : Fixed : Stale : Domain
+          1 :     0 : 0.9979938619848546 :  None : False : False : NonNegativeReals
+          2 :     0 : 0.9990784234883309 :  None : False : False : NonNegativeReals
+          3 :     0 : 0.9993080965795155 :  None : False : False : NonNegativeReals
+          4 :     0 :  0.999789081841285 :  None : False : False : NonNegativeReals
+    yS_CO2_5 : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.9997968453557073 :  None : False : False : NonNegativeReals
+    FF_S : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 7.750064902589373 :  None : False : False : NonNegativeReals
+    FL_S : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.9999999999999942 :  None : False : False : NonNegativeReals
+    FV_S : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.7185000000000058 :  None : False : False : NonNegativeReals
+    FB_S : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.3220740000000418 :  None : False : False : NonNegativeReals
+    FMK : Size=1, Index=None
+        Key  : Lower : Value               : Upper : Fixed : Stale : Domain
+        None :     0 : 0.32207400000000586 :  None : False : False : NonNegativeReals
+    FT_S : Size=1, Index=None
+        Key  : Lower : Value            : Upper : Fixed : Stale : Domain
+        None :     0 : 8.42799090258933 :  None : False : False : NonNegativeReals
+    FD_S : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 7.750064902589344 :  None : False : False : NonNegativeReals
+    F_comp : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 8.750064902589331 :  None : False : False : NonNegativeReals
+    xF_S : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.9958827488289946 :  None : False : False : NonNegativeReals
+    KS_IPA : Size=1, Index=None
+        Key  : Lower : Value                : Upper : Fixed : Stale : Domain
+        None :     0 : 0.021299999999998948 :  None : False : False : NonNegativeReals
+    P1_cond : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  40.0 :  None : False : False : NonNegativeReals
+    P2_cond : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 : 100.0 :  None : False : False : NonNegativeReals
+    T1_cond : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 354.21437858358956 :  None : False : False : NonNegativeReals
+    T2_cond : Size=1, Index=None
+        Key  : Lower : Value            : Upper : Fixed : Stale : Domain
+        None :     0 : 460.217715013104 :  None : False : False : NonNegativeReals
+    V1_cond : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 6.3584166423784065 :  None : False : False : NonNegativeReals
+    V2_cond : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 3.3045027589879483 :  None : False : False : NonNegativeReals
+    rho_B_CO2 : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  23.4 :  None : False : False : NonNegativeReals
+    CpB_CO2 : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  69.4 :  None : False : False : NonNegativeReals
+    TB_sh : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 351.4208099394193 :  None : False : False : NonNegativeReals
+    TB_tb_ave : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 413.4296652696125 :  None : False : False : NonNegativeReals
+    TB_tb_in : Size=1, Index=None
+        Key  : Lower : Value            : Upper : Fixed : Stale : Domain
+        None :     0 : 460.217715013104 :  None : False : False : NonNegativeReals
+    TB_tb_out : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 366.64161552612103 :  None : False : False : NonNegativeReals
+    dH_IPA : Size=1, Index=None
+        Key  : Lower : Value   : Upper : Fixed : Stale : Domain
+        None :     0 : 44000.0 :  None : False : False : NonNegativeReals
+    dH_CO2 : Size=1, Index=None
+        Key  : Lower : Value   : Upper : Fixed : Stale : Domain
+        None :     0 : 15326.0 :  None : False : False : NonNegativeReals
+    dH_B : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 15383.524001446278 :  None : False : False : NonNegativeReals
+    Pvap_B_IPA : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.8519999999996711 :  None : False : False : NonNegativeReals
+    P_B : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  40.0 :  None : False : False : NonNegativeReals
+    F_B : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 1.7019946744566992 :  None : False : False : NonNegativeReals
+    F_B_bypass : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 6.048070228132651 :  None : False : False : NonNegativeReals
+    rho_C_CO2 : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  23.4 :  None : False : False : NonNegativeReals
+    rho_C_H2O : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  56.3 :  None : False : False : NonNegativeReals
+    CpC_CO2 : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  69.4 :  None : False : False : NonNegativeReals
+    CpC_H2O : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 :  72.5 :  None : False : False : NonNegativeReals
+    TC_tb_in : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 439.6674325335257 :  None : False : False : NonNegativeReals
+    TC_tb_ave : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 376.3322903365692 :  None : False : False : NonNegativeReals
+    TC_tb_out : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 312.99714813961276 :  None : False : False : NonNegativeReals
+    TC_sh_in : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 : 293.0 :  None : False : False : NonNegativeReals
+    TC_sh_out : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 314.94085132547764 :  None : False : False : NonNegativeReals
+    TC_sh_ave : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 303.97042566273876 :  None : False : False : NonNegativeReals
+    F_C : Size=1, Index=None
+        Key  : Lower : Value             : Upper : Fixed : Stale : Domain
+        None :     0 : 7.750064902589356 :  None : False : False : NonNegativeReals
+    F_C_H2O : Size=1, Index=None
+        Key  : Lower : Value : Upper : Fixed : Stale : Domain
+        None :     0 : 42.83 :  None : False : False : NonNegativeReals
+    yC_IPA : Size=1, Index=None
+        Key  : Lower : Value                  : Upper : Fixed : Stale : Domain
+        None :     0 : 0.00020315464401903687 :  None : False : False : NonNegativeReals
+    yC_CO2 : Size=1, Index=None
+        Key  : Lower : Value              : Upper : Fixed : Stale : Domain
+        None :     0 : 0.9997968453558904 :  None : False : False : NonNegativeReals
+
+  Objectives:
+    obj_ss : Size=1, Index=None, Active=True
+        Key  : Active : Value
+        None :   True :   0.0
+
+  Constraints:
+    const_E1 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 5.814793091474257e-15 :   0.0
+    const_E2 : Size=2
+        Key : Lower : Body                  : Upper
+          2 :   0.0 : 4.048844592929868e-15 :   0.0
+          3 :   0.0 : 5.113964807179627e-15 :   0.0
+    const_E3 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : 2.4338170367954604e-15 :   0.0
+    const_E4 : Size=3
+        Key : Lower : Body                  : Upper
+          2 :   0.0 :  3.96939425773013e-14 :   0.0
+          3 :   0.0 :  2.62906016401665e-14 :   0.0
+          4 :   0.0 : 1.741619001793815e-14 :   0.0
+    const_E5 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 5.995085070736872e-14 :   0.0
+    const_E6 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -6.106226635438361e-16 :   0.0
+    const_E7 : Size=1
+        Key  : Lower : Body                : Upper
+        None : 0.019 : 0.01899999999995807 : 0.019
+    const_E8 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_E9 : Size=1
+        Key  : Lower : Body               : Upper
+        None :   1.8 : 1.7999999999999998 :   1.8
+    const_F1 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : 2.6645352591003757e-15 :   0.0
+    const_F2 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 1.974145673322436e-13 :   0.0
+    const_F3 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -2.0028423364237824e-13 :   0.0
+    const_F4 : Size=1
+        Key  : Lower : Body              : Upper
+        None :   1.3 : 1.300000000000002 :   1.3
+    const_F5 : Size=1
+        Key  : Lower  : Body                : Upper
+        None : 0.0125 : 0.01250000000004549 : 0.0125
+    const_F7 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : 1.7763568394002505e-15 :   0.0
+    const_F9 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -4.973799150320701e-14 :   0.0
+    const_F11 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -5.329070518200751e-15 :   0.0
+    const_F13 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -5.329070518200751e-15 :   0.0
+    const_F14 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -1.092459456231154e-13 :   0.0
+    const_F15 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 6.661338147750939e-15 :   0.0
+    const_F16 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_F17 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 3.469446951953614e-17 :   0.0
+    const_F18 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -1.1102230246251565e-16 :   0.0
+    const_F19 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 6.217248937900877e-15 :   0.0
+    const_F20 : Size=1
+        Key  : Lower : Body  : Upper
+        None : 100.0 : 100.0 : 100.0
+    const_F22 : Size=1
+        Key  : Lower : Body : Upper
+        None :  40.0 : 40.0 :  40.0
+    const_S1 : Size=1
+        Key  : Lower    : Body                : Upper
+        None : 0.322074 : 0.32207400000000586 : 0.322074
+    const_S2 : Size=1
+        Key  : Lower  : Body               : Upper
+        None : 0.7185 : 0.7185000000000058 : 0.7185
+    const_S3 : Size=1
+        Key  : Lower : Body               : Upper
+        None :   1.0 : 0.9999999999999942 :   1.0
+    const_S5 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 5.329070518200751e-15 :   0.0
+    const_S6 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 4.440892098500626e-15 :   0.0
+    const_S7 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : 1.1431827706687159e-14 :   0.0
+    const_S8 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -1.6653345369377348e-15 :   0.0
+    const_S9 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -8.998878031629687e-16 :   0.0
+    const_S10 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : 1.6653345369377348e-16 :   0.0
+    const_S19 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 5.329070518200751e-15 :   0.0
+    const_S20 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -5.329070518200751e-15 :   0.0
+    const_S11 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -1.2434497875801753e-14 :   0.0
+    const_S12 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -7.105427357601002e-15 :   0.0
+    const_S13 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_S18 : Size=1
+        Key  : Lower  : Body                 : Upper
+        None : 0.0213 : 0.021299999999998948 : 0.0213
+    const_S15 : Size=3
+        Key : Lower : Body                   : Upper
+          2 :   0.0 :  5.273125686100499e-15 :   0.0
+          3 :   0.0 : 2.5308964993198124e-14 :   0.0
+          4 :   0.0 :  7.355920072279337e-14 :   0.0
+    const_S16 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 6.604959634781693e-16 :   0.0
+    const_S17 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -9.237055564881302e-14 :   0.0
+    const_cond1 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_cond2 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_cond3 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_cond4 : Size=1
+        Key  : Lower : Body  : Upper
+        None : 100.0 : 100.0 : 100.0
+    const_cond5 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -1.1368683772161603e-13 :   0.0
+    const_cond6 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_B1 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 8.526512829121202e-14 :   0.0
+    const_B2 : Size=1
+        Key  : Lower : Body : Upper
+        None :  40.0 : 40.0 :  40.0
+    const_B3 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -5.828670879282072e-16 :   0.0
+    const_B4 : Size=1
+        Key  : Lower   : Body    : Upper
+        None : 44000.0 : 44000.0 : 44000.0
+    const_B5 : Size=1
+        Key  : Lower   : Body    : Upper
+        None : 15326.0 : 15326.0 : 15326.0
+    const_B6 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -1.8189894035458565e-12 :   0.0
+    const_B7 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -7.125014244922873e-13 :   0.0
+    const_B8 : Size=1
+        Key  : Lower : Body : Upper
+        None :  69.4 : 69.4 :  69.4
+    const_B13 : Size=1
+        Key  : Lower : Body : Upper
+        None :  23.4 : 23.4 :  23.4
+    const_B9 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_B10 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 6.548361852765083e-11 :   0.0
+    const_B11 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -5.684341886080802e-14 :   0.0
+    const_B12 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 6.217248937900877e-15 :   0.0
+    const_C1 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -1.1368683772161603e-13 :   0.0
+    const_C2 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 6.217248937900877e-15 :   0.0
+    const_C3 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : 1.3642420526593924e-12 :   0.0
+    const_C5 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_C16 : Size=1
+        Key  : Lower : Body : Upper
+        None :   0.0 :  0.0 :   0.0
+    const_C6 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : 3.2373977768235377e-12 :   0.0
+    const_C7 : Size=1
+        Key  : Lower : Body : Upper
+        None :  72.5 : 72.5 :  72.5
+    const_C17 : Size=1
+        Key  : Lower : Body : Upper
+        None :  56.3 : 56.3 :  56.3
+    const_C8 : Size=1
+        Key  : Lower : Body  : Upper
+        None :   293 : 293.0 :   293
+    const_C9 : Size=1
+        Key  : Lower : Body                    : Upper
+        None :   0.0 : -1.1368683772161603e-13 :   0.0
+    const_C10 : Size=1
+        Key  : Lower : Body  : Upper
+        None : 42.83 : 42.83 : 42.83
+    const_C11 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 6.560995799773542e-14 :   0.0
+    const_C12 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 9.070522111187529e-14 :   0.0
+    const_C13 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -9.054530129143368e-14 :   0.0
+    const_C14 : Size=1
+        Key  : Lower : Body                  : Upper
+        None :   0.0 : 9.061580153769955e-14 :   0.0
+    const_C15 : Size=1
+        Key  : Lower : Body                   : Upper
+        None :   0.0 : -5.329070518200751e-15 :   0.0
