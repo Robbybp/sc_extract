@@ -575,7 +575,7 @@ m.const_S9 = Constraint(m.t,rule=const_S9_rule)
 
 # tray 1 (reboiler):
 def const_S10_rule(m,t):
-    return m.MS*m.xS_CO2dot[1,t] == \
+    return m.MBS*m.xS_CO2dot[1,t] == \
             (m.FL_S[t] + (1-m.qF[t])*m.FF_S[t])*(m.xS_CO2[2,t] - m.xS_CO2[1,t]) + \
                                       m.FV_S[t]*(m.xS_CO2[1,t] - m.yS_CO2[1,t])
 m.const_S10 = Constraint(m.t,rule=const_S10_rule)
